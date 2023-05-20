@@ -8,7 +8,8 @@ import { IconButton, Stack } from '@mui/material';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
 import { useState } from 'react';
 
-pdfjs.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
+pdfjs.GlobalWorkerOptions.workerSrc =
+  'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
 
 const bull = (
   <Box
@@ -30,13 +31,22 @@ export default function BasicCard() {
   };
 
   return (
-    <Stack direction={'column'} alignItems={'center'} justifyContent={'center'}>
+    <Stack direction={'column'} alignItems={'center'} justifyContent={'center'} sx={{height:"100vh"}}>
       <Typography>Escolha um arquivo</Typography>
       <IconButton color="info" component="label" sx={{ width: '5%' }}>
         <AttachFileIcon />
         <input hidden type="file" id="file" onChange={handleFile} />
       </IconButton>
-      <Box sx={{ width: '40%', backgroundColor: '#fff', height: '25vh' }}>
+      <Stack
+        sx={{
+          width: '40%',
+          backgroundColor: '#fff',
+          height: !file ? '10vh' : 'auto',
+          borderRadius: '10px',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
         {file ? (
           // eslint-disable-next-line @next/next/no-img-element
           // <img src={file} alt="file" width={'100%'} height={'100%'} />
@@ -49,10 +59,10 @@ export default function BasicCard() {
           </Document>
         ) : (
           <Typography color="black" component={'span'}>
-            Selecione uma imagem
+            Selecione um Documento para
           </Typography>
         )}
-      </Box>
+      </Stack>
     </Stack>
   );
 }
