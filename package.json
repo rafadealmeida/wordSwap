@@ -10,8 +10,8 @@
   },
   "dependencies": {
     "@emotion/cache": "latest",
-    "@emotion/server": "latest",
     "@emotion/react": "latest",
+    "@emotion/server": "latest",
     "@emotion/styled": "latest",
     "@faker-js/faker": "latest",
     "@mui/icons-material": "latest",
@@ -25,6 +25,11 @@
     "next": "13.4.2",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "react-pdf": "^6.2.2",
     "typescript": "5.0.4"
+  },
+  "devDependencies": {
+    "@types/react-pdf": "^6.2.0",
+    "file-loader": "^6.2.0"
   }
 }
