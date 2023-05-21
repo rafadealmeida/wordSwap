@@ -27,10 +27,12 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-pdf": "^6.2.2",
-    "typescript": "5.0.4"
+    "typescript": "5.0.4",
+    "word-extractor": "^1.0.4"
   },
   "devDependencies": {
+    "@types/pdf-parse": "^1.1.1",
     "@types/react-pdf": "^6.2.0",
-    "file-loader": "^6.2.0"
+    "@types/word-extractor": "^1.0.1"
   }
 }

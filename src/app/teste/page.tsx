@@ -5,7 +5,7 @@ import { IconButton, Stack, Button, Typography } from '@mui/material';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
 import { useState } from 'react';
 import { WORKERSRC } from '../../../pdf-worker';
-import axios, { AxiosError } from 'axios';
+import api from '../../../src/service/axiosApi';
 
 pdfjs.GlobalWorkerOptions.workerSrc = WORKERSRC;
 
@@ -24,8 +24,7 @@ export default function BasicCard() {
     try {
       const formData = new FormData();
       formData.append('file', file);
-      const { data } = await axios.post('/api/fileUpload', formData);
-      console.log(data);
+      await api.post('/api/fileUpload', formData);
     } catch (error) {
       console.log(error);
     }
@@ -45,7 +44,13 @@ export default function BasicCard() {
         </Typography>
         <IconButton color="info" component="label" sx={{ width: '5%' }}>
           <AttachFileIcon fontSize="medium" />
-          <input hidden type="file" id="file" onChange={handleFile} />
+          <input
+            hidden
+            type="file"
+            id="file"
+            accept=".doc, .docx, .pdf"
+            onChange={handleFile}
+          />
         </IconButton>
       </Stack>
       <Stack
@@ -68,11 +73,13 @@ export default function BasicCard() {
           </Document>
         ) : (
           <Typography color="black" component={'span'}>
-            Selecione um Documento para
+            Selecione um Documento
           </Typography>
         )}
       </Stack>
-      <Button variant="contained">Confirmar</Button>
+      <Button variant="contained" onClick={upload}>
+        Confirmar
+      </Button>
     </Stack>
   );
 }
