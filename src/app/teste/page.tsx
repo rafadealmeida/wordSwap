@@ -1,21 +1,42 @@
 'use client';
 
 import { Document, Page, pdfjs } from 'react-pdf';
-import { IconButton, Stack, Button, Typography } from '@mui/material';
+import {
+  IconButton,
+  Stack,
+  Button,
+  Typography,
+  TextField,
+} from '@mui/material';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
 import { useState } from 'react';
 import { WORKERSRC } from '../../../pdf-worker';
 import api from '../../../src/service/axiosApi';
+import DocViewer, { DocViewerRenderers } from '@cyntler/react-doc-viewer';
 
 pdfjs.GlobalWorkerOptions.workerSrc = WORKERSRC;
 
 export default function BasicCard() {
   const [file, setFile] = useState<string>('');
+  const [conteudo, setConteudo] = useState<string>('');
+  const [keys, setKeys] = useState<string[]>();
+  const [selectedDocs, setSelectedDocs] = useState<File[]>([]);
 
   const handleFile = (event: any): void => {
     const file = event.target?.files[0];
+    setSelectedDocs(Array.from(event.target.files));
+    console.log(URL.createObjectURL(file));
+
     setFile(file);
   };
+
+  interface ResponseText {
+    data: {
+      keys: string[];
+      conteudo: string;
+      mensagem?: string;
+    };
+  }
 
   const upload = async (): Promise<void> => {
     if (!file) {
@@ -24,7 +45,14 @@ export default function BasicCard() {
     try {
       const formData = new FormData();
       formData.append('file', file);
-      await api.post('/api/fileUpload', formData);
+      // const response = await api.post('/api/fileUpload', formData);
+      const response: ResponseText = await api.post(
+        '/api/fileUpload',
+        formData,
+      );
+      setKeys(response.data.keys);
+      setConteudo(response.data.conteudo);
+      console.log(response.data.mensagem);
     } catch (error) {
       console.log(error);
     }
@@ -48,7 +76,7 @@ export default function BasicCard() {
             hidden
             type="file"
             id="file"
-            accept=".doc, .docx, .pdf"
+            accept=".doc, .docx"
             onChange={handleFile}
           />
         </IconButton>
@@ -56,7 +84,7 @@ export default function BasicCard() {
       <Stack
         sx={{
           width: '40%',
-          backgroundColor: '#fff',
+          backgroundColor: '#dad2d2',
           height: !file ? '10vh' : 'auto',
           borderRadius: '10px',
           justifyContent: 'center',
@@ -80,6 +108,23 @@ export default function BasicCard() {
       <Button variant="contained" onClick={upload}>
         Confirmar
       </Button>
+      {keys ? (
+        <Stack sx={{ backgroundColor: '#fff', padding: '16px' }}>
+          {keys?.map((key) => (
+            <TextField
+              key={key}
+              id="outlined-basic"
+              label={key}
+              variant="outlined"
+            />
+          ))}
+        </Stack>
+      ) : (
+        <></>
+      )}
+      <Typography color="#fff" component={'span'} sx={{ width: '50%' }}>
+        {conteudo}
+      </Typography>
     </Stack>
   );
 }
