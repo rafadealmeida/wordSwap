@@ -4,7 +4,7 @@
 ### Descrição
 <!-- Descreva as alterações feitas -->
 
-### ScrenShots
+### Screenshots
 <!-- Se necessário -->
 
 ## Alterações são do tipo :
