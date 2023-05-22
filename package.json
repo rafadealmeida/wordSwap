@@ -10,8 +10,8 @@
   },
   "dependencies": {
     "@emotion/cache": "latest",
-    "@emotion/server": "latest",
     "@emotion/react": "latest",
+    "@emotion/server": "latest",
     "@emotion/styled": "latest",
     "@faker-js/faker": "latest",
     "@mui/icons-material": "latest",
@@ -20,11 +20,20 @@
     "@types/node": "20.2.0",
     "@types/react": "18.2.6",
     "@types/react-dom": "18.2.4",
+    "axios": "^1.4.0",
     "eslint": "8.40.0",
     "eslint-config-next": "13.4.2",
     "next": "13.4.2",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "typescript": "5.0.4"
+    "react-hook-form": "^7.43.9",
+    "react-pdf": "^6.2.2",
+    "typescript": "5.0.4",
+    "word-extractor": "^1.0.4",
+    "yup": "^1.1.1"
+  },
+  "devDependencies": {
+    "@types/react-pdf": "^6.2.0",
+    "@types/word-extractor": "^1.0.1"
   }
 }
