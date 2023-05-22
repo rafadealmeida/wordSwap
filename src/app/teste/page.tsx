@@ -12,7 +12,6 @@ import AttachFileIcon from '@mui/icons-material/AttachFile';
 import { useState } from 'react';
 import { WORKERSRC } from '../../../pdf-worker';
 import api from '../../../src/service/axiosApi';
-import DocViewer, { DocViewerRenderers } from '@cyntler/react-doc-viewer';
 
 pdfjs.GlobalWorkerOptions.workerSrc = WORKERSRC;
 
