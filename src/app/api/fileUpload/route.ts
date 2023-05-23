@@ -17,7 +17,6 @@ export async function POST(req: NextRequest) {
     const formData = await req.formData();
     const files = formData.getAll('file') as File[];
     const fileToExtract = files[0];
-    console.log(fileToExtract.type)
 
     // Verifica se o arquivo é um PDF
     // if (fileToExtract.type !== 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' || fileToExtract.type !== 'application/msword') {
@@ -61,7 +60,8 @@ export async function POST(req: NextRequest) {
       status: 201,
       mensagem: 'Arquivo criado com sucesso',
       conteudo: content,
-      keys:keysForText
+      keys:keysForText,
+      path:uploadDirectory + fileName
     });
   } catch (error) {
     return NextResponse.json({

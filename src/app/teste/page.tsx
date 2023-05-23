@@ -12,14 +12,34 @@ import AttachFileIcon from '@mui/icons-material/AttachFile';
 import { useState } from 'react';
 import { WORKERSRC } from '../../../pdf-worker';
 import api from '../../../src/service/axiosApi';
+import { useForm, SubmitHandler, Controller } from 'react-hook-form';
 
 pdfjs.GlobalWorkerOptions.workerSrc = WORKERSRC;
+const regex = /{{([^{}]+)}}/g
 
 export default function BasicCard() {
   const [file, setFile] = useState<string>('');
   const [conteudo, setConteudo] = useState<string>('');
   const [keys, setKeys] = useState<string[]>();
   const [selectedDocs, setSelectedDocs] = useState<File[]>([]);
+  const {
+    register,
+    handleSubmit,
+    control,
+    formState: { errors },
+  } = useForm();
+  const onSubmit: SubmitHandler<any> = (data) => {
+
+    const newText = conteudo.replace(regex, (match, key) =>{
+      if ((keys as String[]).includes(key) && data.hasOwnProperty(key)) {
+        return data[key];
+      } else {
+        return match;
+      }
+    })
+    setConteudo(newText)
+  };
+
 
   const handleFile = (event: any): void => {
     const file = event.target?.files[0];
@@ -34,6 +54,7 @@ export default function BasicCard() {
       keys: string[];
       conteudo: string;
       mensagem?: string;
+      path?: string;
     };
   }
 
@@ -108,20 +129,42 @@ export default function BasicCard() {
         Confirmar
       </Button>
       {keys ? (
-        <Stack sx={{ backgroundColor: '#fff', padding: '16px' }}>
-          {keys?.map((key) => (
-            <TextField
-              key={key}
-              id="outlined-basic"
-              label={key}
-              variant="outlined"
-            />
-          ))}
+        <Stack
+          sx={{ backgroundColor: '#fff', padding: '16px' }}
+          spacing={3}
+          direction={'column'}
+        >
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            style={{ display: 'flex', flexDirection: 'column' }}
+          >
+            {keys?.map((key) => (
+              <Controller
+                name={`${key}`}
+                control={control}
+                key={key}
+                render={({ field }) => (
+                  <TextField
+                    label={key}
+                    variant="outlined"
+                    margin="dense"
+                    required
+                    {...field}
+                  />
+                )}
+              />
+            ))}
+            <Button variant="outlined" type="submit" sx={{ marginTop: '1rem' }}>
+              {' '}
+              Enviar
+            </Button>
+          </form>
         </Stack>
       ) : (
         <></>
       )}
-      <Typography color="#fff" component={'span'} sx={{ width: '50%' }}>
+
+      <Typography color="#fff" component={'pre'} sx={{ width: '50%' }}>
         {conteudo}
       </Typography>
     </Stack>
