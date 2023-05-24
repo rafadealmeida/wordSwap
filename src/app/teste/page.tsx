@@ -14,49 +14,36 @@ import { WORKERSRC } from '../../../pdf-worker';
 import api from '../../../src/service/axiosApi';
 import { useForm, SubmitHandler, Controller } from 'react-hook-form';
 
+import { ResponseText, FileObj } from '../../@types/typesFile';
+
 pdfjs.GlobalWorkerOptions.workerSrc = WORKERSRC;
-const regex = /{{([^{}]+)}}/g
+const regex = /{{([^{}]+)}}/g;
 
 export default function BasicCard() {
   const [file, setFile] = useState<string>('');
   const [conteudo, setConteudo] = useState<string>('');
   const [keys, setKeys] = useState<string[]>();
-  const [selectedDocs, setSelectedDocs] = useState<File[]>([]);
   const {
-    register,
     handleSubmit,
     control,
     formState: { errors },
   } = useForm();
-  const onSubmit: SubmitHandler<any> = (data) => {
 
-    const newText = conteudo.replace(regex, (match, key) =>{
+  const onSubmit: SubmitHandler<any> = (data) => {
+    const newText = conteudo.replace(regex, (match, key) => {
       if ((keys as String[]).includes(key) && data.hasOwnProperty(key)) {
         return data[key];
       } else {
         return match;
       }
-    })
-    setConteudo(newText)
+    });
+    setConteudo(newText);
   };
-
 
   const handleFile = (event: any): void => {
     const file = event.target?.files[0];
-    setSelectedDocs(Array.from(event.target.files));
-    console.log(URL.createObjectURL(file));
-
     setFile(file);
   };
-
-  interface ResponseText {
-    data: {
-      keys: string[];
-      conteudo: string;
-      mensagem?: string;
-      path?: string;
-    };
-  }
 
   const upload = async (): Promise<void> => {
     if (!file) {
@@ -65,7 +52,6 @@ export default function BasicCard() {
     try {
       const formData = new FormData();
       formData.append('file', file);
-      // const response = await api.post('/api/fileUpload', formData);
       const response: ResponseText = await api.post(
         '/api/fileUpload',
         formData,
@@ -101,42 +87,61 @@ export default function BasicCard() {
           />
         </IconButton>
       </Stack>
+
       <Stack
         sx={{
           width: '40%',
           backgroundColor: '#dad2d2',
-          height: !file ? '10vh' : 'auto',
+          height: keys ? 'auto' : '10vh',
+          padding: '24px',
           borderRadius: '10px',
           justifyContent: 'center',
           alignItems: 'center',
         }}
       >
         {file ? (
-          <Document file={file}>
-            <Page
-              pageNumber={1}
-              renderAnnotationLayer={false}
-              renderTextLayer={false}
-            />
-          </Document>
+          <Typography color="black" component={'span'}>
+            Documento selecionado : {(file as unknown as FileObj).name}
+          </Typography>
         ) : (
           <Typography color="black" component={'span'}>
             Selecione um Documento
           </Typography>
         )}
+        {keys ? (
+          <Typography color="black" component={'pre'}>
+            {conteudo}
+          </Typography>
+        ) : (
+          <></>
+        )}
       </Stack>
+
       <Button variant="contained" onClick={upload}>
         Confirmar
       </Button>
       {keys ? (
         <Stack
-          sx={{ backgroundColor: '#fff', padding: '16px' }}
+          sx={{
+            backgroundColor: '#fff',
+            padding: '16px',
+            width: '50vw',
+            borderRadius: '10px',
+          }}
           spacing={3}
           direction={'column'}
         >
+          <Typography
+            color="#000"
+            component={'h2'}
+            variant="h5"
+            sx={{ textAlign: 'center' }}
+          >
+            Escreva nos campos as infoirmações que deseja substituir.
+          </Typography>
           <form
             onSubmit={handleSubmit(onSubmit)}
-            style={{ display: 'flex', flexDirection: 'column' }}
+            style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}
           >
             {keys?.map((key) => (
               <Controller
@@ -147,26 +152,25 @@ export default function BasicCard() {
                   <TextField
                     label={key}
                     variant="outlined"
-                    margin="dense"
                     required
                     {...field}
                   />
                 )}
               />
             ))}
-            <Button variant="outlined" type="submit" sx={{ marginTop: '1rem' }}>
+            <Button
+              variant="contained"
+              type="submit"
+              sx={{ marginTop: '1rem' }}
+            >
               {' '}
-              Enviar
+              Substituir Palavras
             </Button>
           </form>
         </Stack>
       ) : (
         <></>
       )}
-
-      <Typography color="#fff" component={'pre'} sx={{ width: '50%' }}>
-        {conteudo}
-      </Typography>
     </Stack>
   );
 }
