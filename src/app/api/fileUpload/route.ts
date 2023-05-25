@@ -26,8 +26,8 @@ export async function POST(req: NextRequest) {
     ) {
       // Lê os dados do arquivo
       const fileData = await fileToExtract.arrayBuffer();
-      const textData = Buffer.from(fileData);
 
+      const textData = Buffer.from(fileData);
       const extracted = extractor.extract(textData);
       const content = (await extracted).getBody();
 
@@ -40,6 +40,10 @@ export async function POST(req: NextRequest) {
         keys: keysForText,
       });
     }
+    return NextResponse.json({
+      status:500,
+      mensagem: 'Arquivo não suportado pelo servidor.'
+    })
   } catch (error) {
     return NextResponse.json({
       status: 404,

@@ -7,6 +7,7 @@ import {
   Button,
   Typography,
   TextField,
+  Tooltip,
 } from '@mui/material';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
 import { useState, forwardRef } from 'react';
@@ -14,6 +15,7 @@ import { WORKERSRC } from '../../../pdf-worker';
 import { toast } from 'react-hot-toast';
 import api from '../../../src/service/axiosApi';
 import { useForm, SubmitHandler, Controller } from 'react-hook-form';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 
 import { ResponseText, FileObj } from '../../@types/typesFile';
 
@@ -23,7 +25,6 @@ const regex = /{{([^{}]+)}}/g;
 export default function BasicCard() {
   const [file, setFile] = useState<string>('');
   const [conteudo, setConteudo] = useState<string>('');
-  const [conteudoForDoc, setConteudoForDoc] = useState<[]>([]);
   const [keys, setKeys] = useState<string[]>();
   const {
     handleSubmit,
@@ -39,17 +40,12 @@ export default function BasicCard() {
         return match;
       }
     });
-    const fileArrayObjet = [
-      { type: 'paragraph', children: [{ text: newText }] },
-    ];
-    //@ts-ignore
-    setConteudoForDoc(fileArrayObjet);
     setConteudo(newText);
   };
 
   const handleFile = (event: any): void => {
+    setConteudo('')
     const file = event.target?.files[0];
-    console.log(file);
     if (
       file.type ===
         'application/vnd.openxmlformats-officedocument.wordprocessingml.document' ||
@@ -73,17 +69,17 @@ export default function BasicCard() {
         formData,
       );
       setKeys(response.data.keys);
-      const fileArrayObjet = [
-        { type: 'paragraph', children: [{ text: response.data.conteudo }] },
-      ];
-      //@ts-ignore
-      setConteudoForDoc(fileArrayObjet);
       setConteudo(response.data.conteudo);
-      toast.success(`${response.data.mensagem}`);
-      console.log(response.data.mensagem);
+      if (response.data.status !== 201) {
+        toast.error(`${response.data.mensagem}`);
+      }
+      if (response.data.status === 201) {
+        toast.success(`${response.data.mensagem}`);
+      }
     } catch (error: any) {
-      console.log(error);
       toast.error(`Aconteceu um erro inesperado.`);
+    } finally {
+      setFile('');
     }
   };
 
@@ -101,22 +97,56 @@ export default function BasicCard() {
       sx={{ height: '100vh', overflowY: 'scroll' }}
       spacing={2}
     >
-      <Stack direction={'row'} alignItems={'center'} gap={'1rem'}>
-        <Typography component="label" id="file" color={'black'} variant="h5">
-          Selecione um Documento:
+      {!keys ? (
+        <Stack direction={'row'} alignItems={'center'} gap={'1rem'}>
+          <Typography component="label" id="file" color={'black'} variant="h5">
+            Selecione um Documento:
+          </Typography>
+          <IconButton color="info" component="label" sx={{ width: '5%' }}>
+            <AttachFileIcon fontSize="medium" />
+            <input
+              hidden
+              type="file"
+              id="file"
+              accept=".doc, .docx"
+              onChange={handleFile}
+            />
+          </IconButton>
+        </Stack>
+      ) : (
+        <Typography color="black" component={'span'} variant="h5">
+          Documento selecionado :{' '}
+          <strong>{(file as unknown as FileObj).name}</strong>
         </Typography>
-        <IconButton color="info" component="label" sx={{ width: '5%' }}>
-          <AttachFileIcon fontSize="medium" />
-          <input
-            hidden
-            type="file"
-            id="file"
-            accept=".doc, .docx"
-            onChange={handleFile}
-          />
-        </IconButton>
-      </Stack>
-
+      )}
+      {keys ? (
+        <Stack
+          direction="row"
+          spacing={1}
+          justifyContent={'end'}
+          width={'50vw'}
+        >
+          <Tooltip title="Trocar arquivo">
+            <IconButton component="label">
+              <AttachFileIcon fontSize="medium" />
+              <input
+                hidden
+                type="file"
+                id="file"
+                accept=".doc, .docx"
+                onChange={handleFile}
+              />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Copiar texto">
+            <IconButton onClick={handleCopy}>
+              <ContentCopyIcon />
+            </IconButton>
+          </Tooltip>
+        </Stack>
+      ) : (
+        <></>
+      )}
       <Stack
         sx={{
           width: keys ? '50vw' : '40%',
@@ -128,6 +158,7 @@ export default function BasicCard() {
           alignItems: 'center',
           overflowY: 'scroll',
           boxShadow: '0px 4px 10px rgba(0,0,0,0.5)',
+          gap: '1rem',
         }}
       >
         {file ? (
@@ -140,40 +171,35 @@ export default function BasicCard() {
           </Typography>
         )}
         {keys ? (
-          <>
-            <Typography
-              color="black"
-              component={'p'}
-              width={'95%'}
-              // align="justify"
-              marginTop={'1rem'}
-              lineHeight={'1.5rem'}
-            >
-              {conteudo}
-            </Typography>
-            <Button variant="contained" onClick={handleCopy}>
-              Click para copiar o texto
-            </Button>
-          </>
+          <Typography
+            color="black"
+            component={'p'}
+            width={'95%'}
+            // align="justify"
+            marginTop={'1rem'}
+            lineHeight={'1.5rem'}
+          >
+            {conteudo}
+          </Typography>
         ) : (
-          // <TextField
-          //   multiline
-          //   value={conteudo}
-          //   disabled
-          //   fullWidth
-          //   sx={{ color: 'black' }}
-          // />
+          <></>
+        )}
+        {file ? (
+          <Button
+            variant="contained"
+            onClick={upload}
+            sx={{ boxShadow: '0px 4px 10px rgba(0,0,0,0.5)' }}
+          >
+            Confirmar
+          </Button>
+        ) : (
           <></>
         )}
       </Stack>
+      <Typography color="#555555" component={'p'} variant="subtitle2">
+        Tipo de documentos aceitos : dosc e docx
+      </Typography>
 
-      <Button
-        variant="contained"
-        onClick={upload}
-        sx={{ boxShadow: '0px 4px 10px rgba(0,0,0,0.5)' }}
-      >
-        Confirmar
-      </Button>
       {keys ? (
         <Stack
           sx={{

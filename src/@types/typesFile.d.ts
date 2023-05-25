@@ -3,6 +3,7 @@ export interface ResponseText {
     keys: string[];
     conteudo: string;
     mensagem?: string;
+    status: number
   };
 }
 
