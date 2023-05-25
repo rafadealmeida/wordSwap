@@ -49,14 +49,16 @@ export default function BasicCard() {
 
   const handleFile = (event: any): void => {
     const file = event.target?.files[0];
+    console.log(file);
     if (
       file.type ===
         'application/vnd.openxmlformats-officedocument.wordprocessingml.document' ||
       file.type === 'application/msword'
     ) {
       setFile(file);
+    } else {
+      toast.error('Arquivo não suportado');
     }
-    toast.error('Arquivo não suportado');
   };
 
   const upload = async (): Promise<void> => {
