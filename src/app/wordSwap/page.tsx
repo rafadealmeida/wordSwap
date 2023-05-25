@@ -10,10 +10,10 @@ import {
   Tooltip,
 } from '@mui/material';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
-import { useState, forwardRef } from 'react';
+import { useState, useRef } from 'react';
 import { WORKERSRC } from '../../../pdf-worker';
 import { toast } from 'react-hot-toast';
-import api from '../../../src/service/axiosApi';
+import api from '../../service/axiosApi';
 import { useForm, SubmitHandler, Controller } from 'react-hook-form';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 
@@ -26,6 +26,7 @@ export default function BasicCard() {
   const [file, setFile] = useState<string>('');
   const [conteudo, setConteudo] = useState<string>('');
   const [keys, setKeys] = useState<string[]>();
+  const fileName = useRef('');
   const {
     handleSubmit,
     control,
@@ -44,7 +45,7 @@ export default function BasicCard() {
   };
 
   const handleFile = (event: any): void => {
-    setConteudo('')
+    setConteudo('');
     const file = event.target?.files[0];
     if (
       file.type ===
@@ -68,12 +69,13 @@ export default function BasicCard() {
         '/api/fileUpload',
         formData,
       );
-      setKeys(response.data.keys);
-      setConteudo(response.data.conteudo);
       if (response.data.status !== 201) {
         toast.error(`${response.data.mensagem}`);
       }
       if (response.data.status === 201) {
+        fileName.current = (file as unknown as FileObj).name;
+        setKeys(response.data.keys);
+        setConteudo(response.data.conteudo);
         toast.success(`${response.data.mensagem}`);
       }
     } catch (error: any) {
@@ -115,8 +117,7 @@ export default function BasicCard() {
         </Stack>
       ) : (
         <Typography color="black" component={'span'} variant="h5">
-          Documento selecionado :{' '}
-          <strong>{(file as unknown as FileObj).name}</strong>
+          Editando o documento : <strong>{fileName.current}</strong>
         </Typography>
       )}
       {keys ? (
@@ -161,11 +162,12 @@ export default function BasicCard() {
           gap: '1rem',
         }}
       >
-        {file ? (
+        {file && (
           <Typography color="black" component={'span'}>
             Documento selecionado : {(file as unknown as FileObj).name}
           </Typography>
-        ) : (
+        )}
+        {!file && !conteudo && (
           <Typography color="black" component={'span'}>
             Nenhum documento selecionado
           </Typography>
