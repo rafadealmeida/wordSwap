@@ -9,7 +9,7 @@ export default function Home() {
   return (
     <Stack className={styles.main}>
       <Typography component={'h5'} variant="h2">
-        Seja bem vindo
+        Seja bem-vindo ao WordSwap
       </Typography>
 
       <Stack

@@ -27,6 +27,7 @@ export default function BasicCard() {
   const [conteudo, setConteudo] = useState<string>('');
   const [keys, setKeys] = useState<string[]>();
   const fileName = useRef('');
+  const textRef = useRef('');
   const {
     handleSubmit,
     control,
@@ -41,11 +42,13 @@ export default function BasicCard() {
         return match;
       }
     });
-    setConteudo(newText);
+    textRef.current = newText;
+    // setConteudo(newText);
   };
 
   const handleFile = (event: any): void => {
     setConteudo('');
+    textRef.current = '';
     const file = event.target?.files[0];
     if (
       file.type ===
@@ -76,6 +79,7 @@ export default function BasicCard() {
         fileName.current = (file as unknown as FileObj).name;
         setKeys(response.data.keys);
         setConteudo(response.data.conteudo);
+        textRef.current = response.data.conteudo;
         toast.success(`${response.data.mensagem}`);
       }
     } catch (error: any) {
@@ -152,8 +156,8 @@ export default function BasicCard() {
         sx={{
           width: keys ? '50vw' : '40%',
           backgroundColor: '#fff',
-          height: keys ? '40%' : '10vh',
-          padding: '24px 0',
+          maxHeight: keys ? '50%' : '10vh',
+          padding: '16px 0',
           borderRadius: '10px',
           justifyContent: 'center',
           alignItems: 'center',
@@ -181,7 +185,8 @@ export default function BasicCard() {
             marginTop={'1rem'}
             lineHeight={'1.5rem'}
           >
-            {conteudo}
+            {/* {conteudo} */}
+            {textRef.current}
           </Typography>
         ) : (
           <></>
@@ -203,18 +208,7 @@ export default function BasicCard() {
       </Typography>
 
       {keys ? (
-        <Stack
-          sx={{
-            backgroundColor: '#fff',
-            padding: '16px',
-            width: '50vw',
-            borderRadius: '10px',
-            overflowY: 'scroll',
-            height: '40%',
-          }}
-          spacing={3}
-          direction={'column'}
-        >
+        <Stack direction={'column'} gap={'1rem'}>
           <Typography
             color="#000"
             component={'h2'}
@@ -223,38 +217,59 @@ export default function BasicCard() {
           >
             Escreva nos campos as informações que deseja substituir.
           </Typography>
-          <form
-            onSubmit={handleSubmit(onSubmit)}
-            style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}
+          <Stack
+            sx={{
+              backgroundColor: '#fff',
+              padding: '16px',
+              width: '50vw',
+              borderRadius: '10px',
+              overflowY: 'scroll',
+              // maxHeight: '60%',
+              // minHeight: '30%',
+              boxShadow: '0px 4px 10px rgba(0,0,0,0.5)',
+            }}
+            spacing={3}
+            direction={'column'}
           >
-            {keys ? (
-              [...new Set(keys)].map((key) => (
-                <Controller
-                  name={`${key}`}
-                  control={control}
-                  key={key}
-                  render={({ field }) => (
-                    <TextField
-                      label={key}
-                      variant="outlined"
-                      required
-                      {...field}
-                    />
-                  )}
-                />
-              ))
-            ) : (
-              <></>
-            )}
-            <Button
-              variant="contained"
-              type="submit"
-              sx={{ marginTop: '1rem' }}
+            <form
+              onSubmit={handleSubmit(onSubmit)}
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '1.5rem',
+                maxHeight: '60%',
+                minHeight: '30%',
+              }}
             >
-              {' '}
-              Substituir Palavras
-            </Button>
-          </form>
+              {keys.length > 0 ? (
+                [...new Set(keys)].map((key) => (
+                  <Controller
+                    name={`${key}`}
+                    control={control}
+                    key={key}
+                    render={({ field }) => (
+                      <TextField
+                        label={key}
+                        variant="outlined"
+                        required
+                        {...field}
+                      />
+                    )}
+                  />
+                ))
+              ) : (
+                <></>
+              )}
+              <Button
+                variant="contained"
+                type="submit"
+                sx={{ marginTop: '1rem' }}
+              >
+                {' '}
+                Substituir Palavras
+              </Button>
+            </form>
+          </Stack>
         </Stack>
       ) : (
         <></>
