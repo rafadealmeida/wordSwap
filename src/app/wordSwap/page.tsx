@@ -3,7 +3,6 @@
 // import { Document, Page, pdfjs } from 'react-pdf';
 import { Stack, Typography } from '@mui/material';
 import { useState, useRef, useCallback } from 'react';
-import { WORKERSRC } from '../../../pdf-worker';
 import { toast } from 'react-hot-toast';
 import api from '../../service/axiosApi';
 import { SubmitHandler } from 'react-hook-form';
