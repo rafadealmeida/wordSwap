@@ -10,22 +10,22 @@ import {
   Tooltip,
 } from '@mui/material';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
-import { useState, useRef, useCallback } from 'react';
+import { useState, useRef } from 'react';
 import { WORKERSRC } from '../../../pdf-worker';
 import { toast } from 'react-hot-toast';
 import api from '../../service/axiosApi';
 import { useForm, SubmitHandler, Controller } from 'react-hook-form';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+// @ts-ignore
+import Viewer from 'react-office-viewer';
 
 import { ResponseText, FileObj } from '../../@types/typesFile';
-import { SideBarFillTemplate } from '@/components/SideBarFillTemplate';
 
 // pdfjs.GlobalWorkerOptions.workerSrc = WORKERSRC;
 const regex = /{{([^{}]+)}}/g;
 
 export default function BasicCard() {
   const [file, setFile] = useState<string>('');
-  const [, updateState] = useState<any>();
   const [conteudo, setConteudo] = useState<string>('');
   const [keys, setKeys] = useState<string[]>();
   const fileName = useRef('');
@@ -36,10 +36,9 @@ export default function BasicCard() {
     formState: { errors },
   } = useForm();
 
-  const forceUpdate = useCallback(()=>updateState({}),[])
+  console.log(file)
 
-  const onSubmitFn: SubmitHandler<any> = (data) => {
-    console.log('submit', data);
+  const onSubmit: SubmitHandler<any> = (data) => {
     const newText = conteudo.replace(regex, (match, key) => {
       if ((keys as String[]).includes(key) && data.hasOwnProperty(key)) {
         return data[key];
@@ -47,9 +46,7 @@ export default function BasicCard() {
         return match;
       }
     });
-    console.log('new text', newText);
     textRef.current = newText;
-    forceUpdate()
     // setConteudo(newText);
   };
 
@@ -110,27 +107,10 @@ export default function BasicCard() {
       sx={{ height: '100vh', overflowY: 'scroll' }}
       spacing={2}
     >
-      {!keys ? (
-        <Stack direction={'row'} alignItems={'center'} gap={'1rem'}>
-          <Typography component="label" id="file" color={'black'} variant="h5">
-            Selecione um Documento:
-          </Typography>
-          <IconButton color="info" component="label" sx={{ width: '5%' }}>
-            <AttachFileIcon fontSize="medium" />
-            <input
-              hidden
-              type="file"
-              id="file"
-              accept=".doc, .docx"
-              onChange={handleFile}
-            />
-          </IconButton>
-        </Stack>
-      ) : (
-        <Typography color="black" component={'span'} variant="h5">
-          Editando o documento : <strong>{fileName.current}</strong>
-        </Typography>
-      )}
+      <Stack direction="row" spacing={1} justifyContent={'end'} width={'50vw'}>
+        <Viewer file={file} />
+      </Stack>
+
       {keys ? (
         <Stack
           direction="row"
@@ -159,66 +139,78 @@ export default function BasicCard() {
       ) : (
         <></>
       )}
-      <Stack
-        sx={{
-          width: keys ? '50vw' : '40%',
-          backgroundColor: '#fff',
-          maxHeight: keys ? '50%' : '10vh',
-          padding: '16px 0',
-          borderRadius: '10px',
-          justifyContent: 'center',
-          alignItems: 'center',
-          overflowY: 'scroll',
-          boxShadow: '0px 4px 10px rgba(0,0,0,0.5)',
-          gap: '1rem',
-        }}
-      >
-        {file && (
-          <Typography color="black" component={'span'}>
-            Documento selecionado : {(file as unknown as FileObj).name}
-          </Typography>
-        )}
-        {!file && !conteudo && (
-          <Typography color="black" component={'span'}>
-            Nenhum documento selecionado
-          </Typography>
-        )}
-        {keys ? (
-          <Typography
-            color="black"
-            component={'pre'}
-            width={'95%'}
-            // align="justify"
-            marginTop={'1rem'}
-            lineHeight={'1.5rem'}
-            sx={{
-              whiteSpace: 'pre-wrap',
-            }}
-          >
-            {/* {conteudo} */}
-            {textRef.current}
-          </Typography>
-        ) : (
-          <></>
-        )}
-        {file ? (
-          <Button
-            variant="contained"
-            onClick={upload}
-            sx={{ boxShadow: '0px 4px 10px rgba(0,0,0,0.5)' }}
-          >
-            Confirmar
-          </Button>
-        ) : (
-          <></>
-        )}
-      </Stack>
+
       <Typography color="#555555" component={'p'} variant="subtitle2">
-        Tipo de documentos aceitos : dosc e docx
+        Tipo de documentos aceitos : dosc e docx.
+      </Typography>
+      <Typography color="#908e8e" component={'p'} variant="subtitle2">
+        Lembre-se que as palavras a serem substituidas devem estar entre
       </Typography>
 
       {keys ? (
-        <SideBarFillTemplate keys={keys} onSubmitFn={onSubmitFn} />
+        <Stack direction={'column'} gap={'1rem'}>
+          <Typography
+            color="#000"
+            component={'h2'}
+            variant="h5"
+            sx={{ textAlign: 'center' }}
+          >
+            Escreva nos campos as informações que deseja substituir.
+          </Typography>
+          <Stack
+            sx={{
+              backgroundColor: '#fff',
+              padding: '16px',
+              width: '50vw',
+              borderRadius: '10px',
+              overflowY: 'scroll',
+              // maxHeight: '60%',
+              // minHeight: '30%',
+              boxShadow: '0px 4px 10px rgba(0,0,0,0.5)',
+            }}
+            spacing={3}
+            direction={'column'}
+          >
+            <form
+              onSubmit={handleSubmit(onSubmit)}
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '1.5rem',
+                maxHeight: '60%',
+                minHeight: '30%',
+              }}
+            >
+              {keys.length > 0 ? (
+                [...new Set(keys)].map((key) => (
+                  <Controller
+                    name={`${key}`}
+                    control={control}
+                    key={key}
+                    render={({ field }) => (
+                      <TextField
+                        label={key}
+                        variant="outlined"
+                        required
+                        {...field}
+                      />
+                    )}
+                  />
+                ))
+              ) : (
+                <></>
+              )}
+              <Button
+                variant="contained"
+                type="submit"
+                sx={{ marginTop: '1rem' }}
+              >
+                {' '}
+                Substituir Palavras
+              </Button>
+            </form>
+          </Stack>
+        </Stack>
       ) : (
         <></>
       )}
