@@ -1,7 +1,7 @@
 'use client';
 
 // import { Document, Page, pdfjs } from 'react-pdf';
-import { Stack, Typography } from '@mui/material';
+import { AppBar, Box, Stack, Toolbar, Typography } from '@mui/material';
 import { useState, useRef, useCallback } from 'react';
 import { toast } from 'react-hot-toast';
 import api from '../../service/axiosApi';
@@ -20,7 +20,7 @@ export default function BasicCard() {
   const [file, setFile] = useState<string>('');
   const [, updateState] = useState<any>();
   const [conteudo, setConteudo] = useState<string>('');
-  const [keys, setKeys] = useState<string[] | null>();
+  const [keys, setKeys] = useState<string[] | null>(null);
   const fileName = useRef('');
   const textRef = useRef('');
 
@@ -97,44 +97,44 @@ export default function BasicCard() {
     setFile('');
   };
 
+  const drawerWidth = 540;
+
   return (
-    <Stack
-      direction={'column'}
-      alignItems={'center'}
-      justifyContent={'center'}
-      sx={{ height: '100vh', overflowY: 'scroll' }}
-      spacing={2}
-    >
-      {!keys ? (
-        <InputForUploadFile handleFile={handleFile} />
-      ) : (
-        <Typography color="black" component={'span'} variant="h5">
-          Editando o documento : <strong>{fileName.current}</strong>
-        </Typography>
-      )}
-      {keys ? (
-        <ToolBarFile handleCopy={handleCopy} handleFile={handleFile} />
-      ) : (
-        <></>
-      )}
-      <FileViewer
-        keys={keys as String[]}
-        file={file}
-        upload={upload}
-        text={textRef.current}
-        conteudo={conteudo}
-        handleCancelSendFile={handleCancelSendFile}
-      />
-
-      <Typography color="#555555" component={'p'} variant="subtitle2">
-        Tipo de documentos aceitos : dosc e docx
-      </Typography>
-
-      {keys ? (
-        <SideBarFillTemplate keys={keys} onSubmitFn={onSubmitFn} />
-      ) : (
-        <></>
-      )}
-    </Stack>
+    <Box sx={{ display: 'flex'}}>
+      <AppBar
+        position="fixed"
+        sx={{ width: `calc(100% - ${drawerWidth}px)`, ml: `${drawerWidth}px`,  }}
+      >
+        <Toolbar>
+          {fileName.current ? (
+            <Stack direction={'row'} alignItems={'center'}>
+              <Typography variant="h6" noWrap component="div">
+                <strong>{fileName.current}</strong>
+              </Typography>
+              <ToolBarFile handleCopy={handleCopy} handleFile={handleFile} />
+            </Stack>
+          ) : (
+            <Typography color="white" component={'span'} variant='h6'>
+              Nenhum documento selecionado
+            </Typography>
+          )}
+        </Toolbar>
+      </AppBar>
+      <SideBarFillTemplate keys={keys} onSubmitFn={onSubmitFn} handleFile={handleFile}/>
+      <Box
+        component="main"
+        sx={{ flexGrow: 1, p: 3 }}
+      >
+        <Toolbar />
+        <FileViewer
+          keys={keys as String[]}
+          file={file}
+          upload={upload}
+          text={textRef.current}
+          conteudo={conteudo}
+          handleCancelSendFile={handleCancelSendFile}
+        />
+      </Box>
+    </Box>
   );
 }

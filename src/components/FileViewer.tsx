@@ -1,5 +1,6 @@
 import { FileObj } from '@/@types/typesFile';
-import { Button, Stack, Typography } from '@mui/material';
+import { Button, Stack, Typography, useTheme } from '@mui/material';
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 interface Props {
   keys: String[];
@@ -7,7 +8,7 @@ interface Props {
   conteudo: String;
   text: String;
   upload: () => void;
-  handleCancelSendFile:() => void;
+  handleCancelSendFile: () => void;
 }
 
 export const FileViewer: React.FC<Props> = ({
@@ -16,19 +17,24 @@ export const FileViewer: React.FC<Props> = ({
   conteudo,
   text,
   upload,
-  handleCancelSendFile
+  handleCancelSendFile,
 }) => {
+  const theme = useTheme();
+  console.log(text.length)
+  // const matches = useMediaQuery(theme.breakpoints.down('md'));
+  const matches = useMediaQuery(theme.breakpoints.down('xl'));
   return (
     <Stack
       sx={{
-        width: keys ? '50vw' : '40%',
+        width: matches ? '100%' : '50%',
         backgroundColor: '#fff',
-        maxHeight: keys ? '50%' : '10vh',
-        padding: '16px 0',
-        borderRadius: '10px',
+        // maxHeight: keys ? '50%' : '10vh',
+        padding: '16px 36px',
+        // borderRadius: '10px',
         justifyContent: 'center',
         alignItems: 'center',
         overflowY: 'scroll',
+        margin: '0 auto',
         boxShadow: '0px 4px 10px rgba(0,0,0,0.5)',
         gap: '1rem',
       }}
