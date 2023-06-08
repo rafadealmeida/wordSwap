@@ -1,6 +1,8 @@
 import './globals.css';
 
 import { Inter } from 'next/font/google';
+import Head from 'next/head';
+import { Toaster } from 'react-hot-toast';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -16,7 +18,14 @@ export default function RootLayout({
 }) {
   return (
     <html lang="pt-br">
-      <body className={inter.className}>{children}</body>
+      <Head>
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+      <body className={inter.className}>
+        <Toaster position="top-center" />
+
+        {children}
+      </body>
     </html>
   );
 }

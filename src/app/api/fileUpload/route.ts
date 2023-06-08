@@ -17,51 +17,40 @@ export async function POST(req: NextRequest) {
     const formData = await req.formData();
     const files = formData.getAll('file') as File[];
     const fileToExtract = files[0];
-    console.log(fileToExtract.type)
 
     // Verifica se o arquivo é um PDF
-    // if (fileToExtract.type !== 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' || fileToExtract.type !== 'application/msword') {
-    //   return NextResponse.json({
-    //     status: 400,
-    //     mensagem: 'O arquivo deve ser um doc ou docx',
-    //   });
-    // }
+    if (
+      fileToExtract.type ===
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document' ||
+      fileToExtract.type === 'application/msword'
+    ) {
+      // Lê os dados do arquivo
+      const fileData = await fileToExtract.arrayBuffer();
 
-    // Lê os dados do arquivo
-    const fileData = await fileToExtract.arrayBuffer();
-    const textData = Buffer.from(fileData);
+      const textData = Buffer.from(fileData);
+      const extracted = extractor.extract(textData);
+      const content = (await extracted).getBody();
 
-    // Define o diretório e nome do arquivo no sistema de arquivos
-    const uploadDirectory = 'public/arquivos/';
-    const fileName = `${Date.now()}_${fileToExtract.name}`;
+      const keysForText = content.match(keys);
 
-    // Salva o arquivo PDF no diretório de upload, porem o coloca em uma Promise para
-    // garantir que o código aguarde a conclusão dessa operação antes de prosseguir para a próxima etapa.
-    await new Promise<void>((resolve, reject) => {
-      fs.writeFile(uploadDirectory + fileName, textData, (err) => {
-        if (err) {
-          console.error(err);
-          reject(err);
-          return NextResponse.json({
-            status: 500,
-            mensagem: 'Não foi possível salvar o arquivo',
-          });
-        } else {
-          resolve();
-        }
+      if (keysForText) {
+        return NextResponse.json({
+          status: 201,
+          mensagem: 'Texto extraido do arquivo com sucesso',
+          conteudo: content,
+          keys: keysForText,
+        });
+      }
+       return NextResponse.json({
+        status: 500,
+        mensagem: 'Este arquivo não há palavras para serem substituidas.',
+        conteudo: content,
+        keys: keysForText,
       });
-    });
-
-    const extracted = extractor.extract(uploadDirectory + fileName);
-    const content = (await extracted).getBody();
-
-    const keysForText = content.match(keys)
-
+    }
     return NextResponse.json({
-      status: 201,
-      mensagem: 'Arquivo criado com sucesso',
-      conteudo: content,
-      keys:keysForText
+      status: 500,
+      mensagem: 'Arquivo não suportado pelo servidor.',
     });
   } catch (error) {
     return NextResponse.json({
@@ -70,4 +59,3 @@ export async function POST(req: NextRequest) {
     });
   }
 }
-
