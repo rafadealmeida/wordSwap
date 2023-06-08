@@ -1,40 +1,33 @@
 'use client';
 
 // import { Document, Page, pdfjs } from 'react-pdf';
-import {
-  IconButton,
-  Stack,
-  Button,
-  Typography,
-  TextField,
-  Tooltip,
-} from '@mui/material';
-import AttachFileIcon from '@mui/icons-material/AttachFile';
-import { useState, useRef } from 'react';
-import { WORKERSRC } from '../../../pdf-worker';
+import { Stack, Typography } from '@mui/material';
+import { useState, useRef, useCallback } from 'react';
 import { toast } from 'react-hot-toast';
 import api from '../../service/axiosApi';
-import { useForm, SubmitHandler, Controller } from 'react-hook-form';
-import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import { SubmitHandler } from 'react-hook-form';
 
 import { ResponseText, FileObj } from '../../@types/typesFile';
+import { SideBarFillTemplate } from '@/components/SideBarFillTemplate';
+import { FileViewer } from '@/components/FileViewer';
+import { ToolBarFile } from '@/components/ToolbarFile';
+import { InputForUploadFile } from '@/components/InputForUploadFile';
 
 // pdfjs.GlobalWorkerOptions.workerSrc = WORKERSRC;
 const regex = /{{([^{}]+)}}/g;
 
 export default function BasicCard() {
   const [file, setFile] = useState<string>('');
+  const [, updateState] = useState<any>();
   const [conteudo, setConteudo] = useState<string>('');
-  const [keys, setKeys] = useState<string[]>();
+  const [keys, setKeys] = useState<string[] | null>();
   const fileName = useRef('');
   const textRef = useRef('');
-  const {
-    handleSubmit,
-    control,
-    formState: { errors },
-  } = useForm();
 
-  const onSubmit: SubmitHandler<any> = (data) => {
+  const forceUpdate = useCallback(() => updateState({}), []);
+
+  const onSubmitFn: SubmitHandler<any> = (data) => {
+    console.log('submit', data);
     const newText = conteudo.replace(regex, (match, key) => {
       if ((keys as String[]).includes(key) && data.hasOwnProperty(key)) {
         return data[key];
@@ -42,19 +35,25 @@ export default function BasicCard() {
         return match;
       }
     });
+    console.log('new text', newText);
     textRef.current = newText;
+    forceUpdate();
     // setConteudo(newText);
   };
 
   const handleFile = (event: any): void => {
-    setConteudo('');
-    textRef.current = '';
+    // setConteudo('');
+    // textRef.current = '';
+    // setKeys(null);
     const file = event.target?.files[0];
     if (
       file.type ===
         'application/vnd.openxmlformats-officedocument.wordprocessingml.document' ||
       file.type === 'application/msword'
     ) {
+      setConteudo('');
+      textRef.current = '';
+      setKeys(null);
       setFile(file);
     } else {
       toast.error('Arquivo não suportado');
@@ -90,9 +89,12 @@ export default function BasicCard() {
   };
 
   const handleCopy = () => {
-    navigator.clipboard.writeText(conteudo).then(() => {
+    navigator.clipboard.writeText(textRef.current).then(() => {
       toast.success('Texto Copiado com sucesso');
     });
+  };
+  const handleCancelSendFile = () => {
+    setFile('');
   };
 
   return (
@@ -104,173 +106,32 @@ export default function BasicCard() {
       spacing={2}
     >
       {!keys ? (
-        <Stack direction={'row'} alignItems={'center'} gap={'1rem'}>
-          <Typography component="label" id="file" color={'black'} variant="h5">
-            Selecione um Documento:
-          </Typography>
-          <IconButton color="info" component="label" sx={{ width: '5%' }}>
-            <AttachFileIcon fontSize="medium" />
-            <input
-              hidden
-              type="file"
-              id="file"
-              accept=".doc, .docx"
-              onChange={handleFile}
-            />
-          </IconButton>
-        </Stack>
+        <InputForUploadFile handleFile={handleFile} />
       ) : (
         <Typography color="black" component={'span'} variant="h5">
           Editando o documento : <strong>{fileName.current}</strong>
         </Typography>
       )}
       {keys ? (
-        <Stack
-          direction="row"
-          spacing={1}
-          justifyContent={'end'}
-          width={'50vw'}
-        >
-          <Tooltip title="Trocar arquivo">
-            <IconButton component="label">
-              <AttachFileIcon fontSize="medium" />
-              <input
-                hidden
-                type="file"
-                id="file"
-                accept=".doc, .docx"
-                onChange={handleFile}
-              />
-            </IconButton>
-          </Tooltip>
-          <Tooltip title="Copiar texto">
-            <IconButton onClick={handleCopy}>
-              <ContentCopyIcon />
-            </IconButton>
-          </Tooltip>
-        </Stack>
+        <ToolBarFile handleCopy={handleCopy} handleFile={handleFile} />
       ) : (
         <></>
       )}
-      <Stack
-        sx={{
-          width: keys ? '50vw' : '40%',
-          backgroundColor: '#fff',
-          maxHeight: keys ? '50%' : '10vh',
-          padding: '16px 0',
-          borderRadius: '10px',
-          justifyContent: 'center',
-          alignItems: 'center',
-          overflowY: 'scroll',
-          boxShadow: '0px 4px 10px rgba(0,0,0,0.5)',
-          gap: '1rem',
-        }}
-      >
-        {file && (
-          <Typography color="black" component={'span'}>
-            Documento selecionado : {(file as unknown as FileObj).name}
-          </Typography>
-        )}
-        {!file && !conteudo && (
-          <Typography color="black" component={'span'}>
-            Nenhum documento selecionado
-          </Typography>
-        )}
-        {keys ? (
-          <Typography
-            color="black"
-            component={'p'}
-            width={'95%'}
-            // align="justify"
-            marginTop={'1rem'}
-            lineHeight={'1.5rem'}
-          >
-            {/* {conteudo} */}
-            {textRef.current}
-          </Typography>
-        ) : (
-          <></>
-        )}
-        {file ? (
-          <Button
-            variant="contained"
-            onClick={upload}
-            sx={{ boxShadow: '0px 4px 10px rgba(0,0,0,0.5)' }}
-          >
-            Confirmar
-          </Button>
-        ) : (
-          <></>
-        )}
-      </Stack>
+      <FileViewer
+        keys={keys as String[]}
+        file={file}
+        upload={upload}
+        text={textRef.current}
+        conteudo={conteudo}
+        handleCancelSendFile={handleCancelSendFile}
+      />
+
       <Typography color="#555555" component={'p'} variant="subtitle2">
         Tipo de documentos aceitos : dosc e docx
       </Typography>
 
       {keys ? (
-        <Stack direction={'column'} gap={'1rem'}>
-          <Typography
-            color="#000"
-            component={'h2'}
-            variant="h5"
-            sx={{ textAlign: 'center' }}
-          >
-            Escreva nos campos as informações que deseja substituir.
-          </Typography>
-          <Stack
-            sx={{
-              backgroundColor: '#fff',
-              padding: '16px',
-              width: '50vw',
-              borderRadius: '10px',
-              overflowY: 'scroll',
-              // maxHeight: '60%',
-              // minHeight: '30%',
-              boxShadow: '0px 4px 10px rgba(0,0,0,0.5)',
-            }}
-            spacing={3}
-            direction={'column'}
-          >
-            <form
-              onSubmit={handleSubmit(onSubmit)}
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '1.5rem',
-                maxHeight: '60%',
-                minHeight: '30%',
-              }}
-            >
-              {keys.length > 0 ? (
-                [...new Set(keys)].map((key) => (
-                  <Controller
-                    name={`${key}`}
-                    control={control}
-                    key={key}
-                    render={({ field }) => (
-                      <TextField
-                        label={key}
-                        variant="outlined"
-                        required
-                        {...field}
-                      />
-                    )}
-                  />
-                ))
-              ) : (
-                <></>
-              )}
-              <Button
-                variant="contained"
-                type="submit"
-                sx={{ marginTop: '1rem' }}
-              >
-                {' '}
-                Substituir Palavras
-              </Button>
-            </form>
-          </Stack>
-        </Stack>
+        <SideBarFillTemplate keys={keys} onSubmitFn={onSubmitFn} />
       ) : (
         <></>
       )}

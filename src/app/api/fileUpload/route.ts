@@ -33,17 +33,25 @@ export async function POST(req: NextRequest) {
 
       const keysForText = content.match(keys);
 
-      return NextResponse.json({
-        status: 201,
-        mensagem: 'Texto extraido do arquivo com sucesso',
+      if (keysForText) {
+        return NextResponse.json({
+          status: 201,
+          mensagem: 'Texto extraido do arquivo com sucesso',
+          conteudo: content,
+          keys: keysForText,
+        });
+      }
+       return NextResponse.json({
+        status: 500,
+        mensagem: 'Este arquivo não há palavras para serem substituidas.',
         conteudo: content,
         keys: keysForText,
       });
     }
     return NextResponse.json({
-      status:500,
-      mensagem: 'Arquivo não suportado pelo servidor.'
-    })
+      status: 500,
+      mensagem: 'Arquivo não suportado pelo servidor.',
+    });
   } catch (error) {
     return NextResponse.json({
       status: 404,
