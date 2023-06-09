@@ -87,7 +87,7 @@ export default function BasicCard() {
     }
   };
 
-  const generateDoc = async () => {
+  const generateDoc = async ():Promise<void> => {
     const textParagraph = textRef.current.split('\n');
     const doc = new Document({
       sections: [
@@ -147,7 +147,7 @@ export default function BasicCard() {
               <Typography variant="h6" noWrap component="div">
                 <strong>{fileName.current}</strong>
               </Typography>
-              <ToolBarFile handleCopy={handleCopy} handleFile={handleFile} />
+              <ToolBarFile handleCopy={handleCopy} handleFile={handleFile} generateDoc={generateDoc}/>
             </Stack>
           ) : (
             <Typography color="white" component={'span'} variant="h6">
@@ -171,7 +171,6 @@ export default function BasicCard() {
           conteudo={conteudo}
           handleCancelSendFile={handleCancelSendFile}
         />
-        <Button onClick={generateDoc}>Baixar</Button>
       </Box>
     </Box>
   );
