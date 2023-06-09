@@ -6,6 +6,7 @@ interface Props {
   keys: string[] | null;
   onSubmitFn: SubmitHandler<any>;
   handleFile: (event: any) => void;
+  handleResetFile: () => void;
 }
 
 const StackStyle = {
@@ -27,6 +28,7 @@ export const SideBarFillTemplate: React.FC<Props> = ({
   keys,
   onSubmitFn,
   handleFile,
+  handleResetFile
 }) => {
   const {
     handleSubmit,
@@ -76,6 +78,7 @@ export const SideBarFillTemplate: React.FC<Props> = ({
                 gap: '1.5rem',
                 maxHeight: '60%',
                 minHeight: '30%',
+                marginTop:'1rem'
               }}
             >
               {keys.length > 0 ? (
@@ -104,6 +107,14 @@ export const SideBarFillTemplate: React.FC<Props> = ({
               >
                 {' '}
                 Substituir Palavras
+              </Button>
+              <Button
+                variant="outlined"
+                onClick={handleResetFile}
+                sx={{ marginTop: '1rem' }}
+              >
+                {' '}
+                Resetar Documento
               </Button>
             </form>
           </Stack>

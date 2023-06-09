@@ -24,7 +24,7 @@ export const FileViewer: React.FC<Props> = ({
   // const matches = useMediaQuery(theme.breakpoints.down('md'));
   const matches = useMediaQuery(theme.breakpoints.down('xl'));
   const [currentPage, setCurrentPage] = useState(1);
-  const perPage = 4650
+  const perPage = 4650;
 
   const pageCount = Math.ceil(text.length / perPage);
   const startIndex = (currentPage - 1) * perPage;
@@ -43,10 +43,10 @@ export const FileViewer: React.FC<Props> = ({
       sx={{
         width: matches ? '100%' : '50%',
         backgroundColor: '#fff',
-        // maxHeight:  '90%',
+        minHeight: text ? '90vh' : 'auto',
         padding: '16px 36px',
         // borderRadius: '10px',
-        justifyContent: 'center',
+        justifyContent: 'start',
         alignItems: 'center',
         overflowY: 'scroll',
         margin: '0 auto',

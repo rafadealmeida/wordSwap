@@ -58,6 +58,11 @@ export default function BasicCard() {
       toast.error('Arquivo não suportado');
     }
   };
+  const handleResetFile = (): void => {
+    const originalText = conteudo;
+    textRef.current = originalText;
+    forceUpdate();
+  };
 
   const upload = async (): Promise<void> => {
     if (!file) {
@@ -87,7 +92,7 @@ export default function BasicCard() {
     }
   };
 
-  const generateDoc = async ():Promise<void> => {
+  const generateDoc = async (): Promise<void> => {
     const textParagraph = textRef.current.split('\n');
     const doc = new Document({
       sections: [
@@ -147,7 +152,11 @@ export default function BasicCard() {
               <Typography variant="h6" noWrap component="div">
                 <strong>{fileName.current}</strong>
               </Typography>
-              <ToolBarFile handleCopy={handleCopy} handleFile={handleFile} generateDoc={generateDoc}/>
+              <ToolBarFile
+                handleCopy={handleCopy}
+                handleFile={handleFile}
+                generateDoc={generateDoc}
+              />
             </Stack>
           ) : (
             <Typography color="white" component={'span'} variant="h6">
@@ -160,6 +169,7 @@ export default function BasicCard() {
         keys={keys}
         onSubmitFn={onSubmitFn}
         handleFile={handleFile}
+        handleResetFile={handleResetFile}
       />
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <Toolbar />
