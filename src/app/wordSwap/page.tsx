@@ -6,6 +6,8 @@ import { useState, useRef, useCallback } from 'react';
 import { toast } from 'react-hot-toast';
 import api from '../../service/axiosApi';
 import { SubmitHandler } from 'react-hook-form';
+import { Document, Packer, Paragraph, TextRun } from "docx";
+
 
 import { ResponseText, FileObj } from '../../@types/typesFile';
 import { SideBarFillTemplate } from '@/components/SideBarFillTemplate';
@@ -27,7 +29,6 @@ export default function BasicCard() {
   const forceUpdate = useCallback(() => updateState({}), []);
 
   const onSubmitFn: SubmitHandler<any> = (data) => {
-    console.log('submit', data);
     const newText = conteudo.replace(regex, (match, key) => {
       if ((keys as String[]).includes(key) && data.hasOwnProperty(key)) {
         return data[key];
@@ -35,7 +36,6 @@ export default function BasicCard() {
         return match;
       }
     });
-    console.log('new text', newText);
     textRef.current = newText;
     forceUpdate();
     // setConteudo(newText);
@@ -59,6 +59,8 @@ export default function BasicCard() {
       toast.error('Arquivo não suportado');
     }
   };
+
+
 
   const upload = async (): Promise<void> => {
     if (!file) {
@@ -88,6 +90,7 @@ export default function BasicCard() {
     }
   };
 
+
   const handleCopy = () => {
     navigator.clipboard.writeText(textRef.current).then(() => {
       toast.success('Texto Copiado com sucesso');
@@ -100,31 +103,43 @@ export default function BasicCard() {
   const drawerWidth = 540;
 
   return (
-    <Box sx={{ display: 'flex'}}>
+    <Box sx={{ display: 'flex' }}>
       <AppBar
         position="fixed"
-        sx={{ width: `calc(100% - ${drawerWidth}px)`, ml: `${drawerWidth}px`,  }}
+        sx={{ width: `calc(100% - ${drawerWidth}px)`, ml: `${drawerWidth}px` }}
       >
-        <Toolbar>
+        <Toolbar
+          sx={{
+            width: '100%',
+            display: 'flex',
+            justifyContent: 'space-between',
+          }}
+        >
           {fileName.current ? (
-            <Stack direction={'row'} alignItems={'center'}>
+            <Stack
+              direction={'row'}
+              alignItems={'center'}
+              width="100%"
+              justifyContent={'space-between'}
+            >
               <Typography variant="h6" noWrap component="div">
                 <strong>{fileName.current}</strong>
               </Typography>
               <ToolBarFile handleCopy={handleCopy} handleFile={handleFile} />
             </Stack>
           ) : (
-            <Typography color="white" component={'span'} variant='h6'>
+            <Typography color="white" component={'span'} variant="h6">
               Nenhum documento selecionado
             </Typography>
           )}
         </Toolbar>
       </AppBar>
-      <SideBarFillTemplate keys={keys} onSubmitFn={onSubmitFn} handleFile={handleFile}/>
-      <Box
-        component="main"
-        sx={{ flexGrow: 1, p: 3 }}
-      >
+      <SideBarFillTemplate
+        keys={keys}
+        onSubmitFn={onSubmitFn}
+        handleFile={handleFile}
+      />
+      <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <Toolbar />
         <FileViewer
           keys={keys as String[]}

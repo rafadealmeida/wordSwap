@@ -1,6 +1,7 @@
 import { FileObj } from '@/@types/typesFile';
-import { Button, Stack, Typography, useTheme } from '@mui/material';
+import { Button, Pagination, Stack, Typography, useTheme } from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import { useState, useEffect } from 'react';
 
 interface Props {
   keys: String[];
@@ -20,15 +21,29 @@ export const FileViewer: React.FC<Props> = ({
   handleCancelSendFile,
 }) => {
   const theme = useTheme();
-  console.log(text.length)
   // const matches = useMediaQuery(theme.breakpoints.down('md'));
   const matches = useMediaQuery(theme.breakpoints.down('xl'));
+  const [currentPage, setCurrentPage] = useState(1);
+  const perPage = 4650
+
+  const pageCount = Math.ceil(text.length / perPage);
+  const startIndex = (currentPage - 1) * perPage;
+  const endIndex = startIndex + perPage;
+  const renderedText = text.substring(startIndex, endIndex);
+
+  const handleChangePage = (
+    event: React.ChangeEvent<unknown>,
+    page: number,
+  ) => {
+    setCurrentPage(page);
+  };
+
   return (
     <Stack
       sx={{
         width: matches ? '100%' : '50%',
         backgroundColor: '#fff',
-        // maxHeight: keys ? '50%' : '10vh',
+        // maxHeight:  '90%',
         padding: '16px 36px',
         // borderRadius: '10px',
         justifyContent: 'center',
@@ -46,7 +61,7 @@ export const FileViewer: React.FC<Props> = ({
       )}
       {!file && !conteudo && (
         <Typography color="black" component={'span'}>
-          Nenhum documento selecionado
+          Selecione um documento para continuar
         </Typography>
       )}
       {keys ? (
@@ -61,11 +76,22 @@ export const FileViewer: React.FC<Props> = ({
             whiteSpace: 'pre-wrap',
           }}
         >
-          {/* {conteudo} */}
-          {text}
+          {renderedText}
+          {/* {text} */}
         </Typography>
       ) : (
         <></>
+      )}
+
+      {pageCount > 1 && (
+        <Stack direction="row" justifyContent="center" marginTop={2}>
+          <Pagination
+            count={pageCount}
+            page={currentPage}
+            onChange={handleChangePage}
+            color="primary"
+          />
+        </Stack>
       )}
       {file ? (
         <Stack direction={'row'} gap={'1rem'}>

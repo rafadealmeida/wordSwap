@@ -9,10 +9,10 @@ interface Props {
 
 export const ToolBarFile: React.FC<Props> = ({ handleFile, handleCopy }) => {
   return (
-    <Stack direction="row" spacing={1} justifyContent={'end'} width={'50vw'}>
+    <Stack direction="row" spacing={1} >
       <Tooltip title="Trocar arquivo">
         <IconButton component="label">
-          <AttachFileIcon fontSize="medium" />
+          <AttachFileIcon fontSize="medium" sx={{color:'white'}}/>
           <input
             hidden
             type="file"
@@ -23,7 +23,7 @@ export const ToolBarFile: React.FC<Props> = ({ handleFile, handleCopy }) => {
         </IconButton>
       </Tooltip>
       <Tooltip title="Copiar texto">
-        <IconButton onClick={handleCopy}>
+        <IconButton onClick={handleCopy} sx={{color:'white'}}>
           <ContentCopyIcon />
         </IconButton>
       </Tooltip>

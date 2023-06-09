@@ -43,9 +43,9 @@ export const SideBarFillTemplate: React.FC<Props> = ({
           width: drawerWidth,
           boxSizing: 'border-box',
         },
-        '.css-12i7wg6-MuiPaper-root-MuiDrawer-paper': {
-          backgroundColor: '#f1eeee',
-        },
+        // '.css-12i7wg6-MuiPaper-root-MuiDrawer-paper': {
+        //   backgroundColor: 'gb(235, 235, 235)',
+        // },
       }}
       variant="permanent"
       anchor="left"
@@ -115,8 +115,8 @@ export const SideBarFillTemplate: React.FC<Props> = ({
           </Typography>
           <Stack gap={'0.5rem'}>
             <Typography color="#595959" component={'span'} variant="subtitle2">
-              Você pode fazer documentos rápidamente preenchendo apenas palavras
-              ou frases. Palavras ou frases a serem substituidas devem esta
+              Faça documentos rápidamente preenchendo apenas palavras
+              ou frases que deseja substituir. Palavras ou frases a serem substituidas devem esta
               entre dois colchetes &#123;&#123; &#125;&#125;.
             </Typography>
             <Typography color="#595959" component={'span'} variant="subtitle2">
