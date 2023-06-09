@@ -1,13 +1,12 @@
 'use client';
 
 // import { Document, Page, pdfjs } from 'react-pdf';
-import { AppBar, Box, Stack, Toolbar, Typography } from '@mui/material';
+import { AppBar, Box, Button, Stack, Toolbar, Typography } from '@mui/material';
 import { useState, useRef, useCallback } from 'react';
 import { toast } from 'react-hot-toast';
 import api from '../../service/axiosApi';
 import { SubmitHandler } from 'react-hook-form';
-import { Document, Packer, Paragraph, TextRun } from "docx";
-
+import { Document, Packer, Paragraph, TextRun } from 'docx';
 
 import { ResponseText, FileObj } from '../../@types/typesFile';
 import { SideBarFillTemplate } from '@/components/SideBarFillTemplate';
@@ -60,8 +59,6 @@ export default function BasicCard() {
     }
   };
 
-
-
   const upload = async (): Promise<void> => {
     if (!file) {
       return;
@@ -90,6 +87,31 @@ export default function BasicCard() {
     }
   };
 
+  const generateDoc = async () => {
+    const textParagraph = textRef.current.split('\n');
+    const doc = new Document({
+      sections: [
+        {
+          properties: {},
+          children: textParagraph.map(
+            (paragraph) =>
+              new Paragraph({
+                text: paragraph,
+              }),
+          ),
+        },
+      ],
+    });
+
+    const docBlob = await Packer.toBlob(doc);
+    const urlLink = window.URL.createObjectURL(docBlob);
+    const link = document.createElement('a');
+    link.href = urlLink;
+    link.setAttribute('download', fileName.current);
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+  };
 
   const handleCopy = () => {
     navigator.clipboard.writeText(textRef.current).then(() => {
@@ -149,6 +171,7 @@ export default function BasicCard() {
           conteudo={conteudo}
           handleCancelSendFile={handleCancelSendFile}
         />
+        <Button onClick={generateDoc}>Baixar</Button>
       </Box>
     </Box>
   );
