@@ -49,7 +49,7 @@ export const FileViewer: React.FC<Props> = ({
   return (
     <Paper
       sx={{
-        width: matches ? '100%' : '50%',
+        width: matches ? '100%' : '70%',
         backgroundColor: 'background',
         minHeight: text ? '90vh' : 'auto',
         padding: '16px 36px',
