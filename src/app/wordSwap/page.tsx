@@ -130,10 +130,21 @@ export default function BasicCard() {
   const drawerWidth = 540;
 
   return (
-    <Box sx={{ display: 'flex' }}>
+    <Box
+      sx={{
+        display: 'flex',
+        backgroundImage:
+          'linear-gradient(rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.12))',
+        height: '100vh',
+      }}
+    >
       <AppBar
         position="fixed"
-        sx={{ width: `calc(100% - ${drawerWidth}px)`, ml: `${drawerWidth}px` }}
+        sx={{
+          width: `calc(100% - ${drawerWidth}px)`,
+          ml: `${drawerWidth}px`,
+          // top: '4%',
+        }}
       >
         <Toolbar
           sx={{

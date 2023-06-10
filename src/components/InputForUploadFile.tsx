@@ -7,7 +7,7 @@ interface Props {
 export const InputForUploadFile: React.FC<Props> = ({ handleFile }) => {
   return (
     <Stack direction={'column'} alignItems={'center'} gap={'0.5rem'}>
-      <Button variant="contained" component="label">
+      <Button variant="contained" component="label"  color='primary'>
         Selecione um Documento
         <input
           hidden
@@ -17,7 +17,7 @@ export const InputForUploadFile: React.FC<Props> = ({ handleFile }) => {
           onChange={handleFile}
         />
       </Button>
-      <Typography color="#555555" component={'p'} variant="subtitle2">
+      <Typography color="text.secondary" component={'p'} variant="subtitle2">
         Tipo de documentos aceitos : dosc e docx
       </Typography>
     </Stack>

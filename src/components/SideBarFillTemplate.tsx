@@ -1,6 +1,14 @@
-import { Button, Drawer, Stack, TextField, Typography } from '@mui/material';
+import {
+  Button,
+  Drawer,
+  Paper,
+  Stack,
+  TextField,
+  Typography,
+} from '@mui/material';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { InputForUploadFile } from './InputForUploadFile';
+import shadows from '@mui/material/styles/shadows';
 
 interface Props {
   keys: string[] | null;
@@ -10,16 +18,18 @@ interface Props {
 }
 
 const StackStyle = {
-  direction: 'column',
+  display: 'flex',
+  flexDirection: 'column',
   justifyContent: 'center',
   alignItems: 'center',
   width: '90%',
-  margin: '4rem auto',
+  margin: '1rem auto',
   gap: '1rem',
   padding: '2rem',
   borderRadius: '1rem',
-  backgroundColor: '#ffffff',
-  boxShadow: '0px 0px 10px 1px rgba(0,0,0,0.5)',
+  backgroundColor: 'background.default',
+  color: 'text.primary',
+  boxShadow: shadows[20],
 };
 
 const drawerWidth = 540;
@@ -28,7 +38,7 @@ export const SideBarFillTemplate: React.FC<Props> = ({
   keys,
   onSubmitFn,
   handleFile,
-  handleResetFile
+  handleResetFile,
 }) => {
   const {
     handleSubmit,
@@ -44,18 +54,19 @@ export const SideBarFillTemplate: React.FC<Props> = ({
         '& .MuiDrawer-paper': {
           width: drawerWidth,
           boxSizing: 'border-box',
+          // top: '4%',
         },
-        // '.css-12i7wg6-MuiPaper-root-MuiDrawer-paper': {
-        //   backgroundColor: 'gb(235, 235, 235)',
-        // },
+        '& .css-15b8vjn-MuiPaper-root-MuiDrawer-paper': {
+          // top: '4%',
+        },
       }}
       variant="permanent"
       anchor="left"
     >
       {keys ? (
-        <Stack sx={StackStyle}>
+        <Paper sx={StackStyle}>
           <Typography
-            color="#000"
+            color="text.primary"
             component={'h2'}
             variant="h5"
             sx={{ textAlign: 'center' }}
@@ -78,7 +89,7 @@ export const SideBarFillTemplate: React.FC<Props> = ({
                 gap: '1.5rem',
                 maxHeight: '60%',
                 minHeight: '30%',
-                marginTop:'1rem'
+                marginTop: '1rem',
               }}
             >
               {keys.length > 0 ? (
@@ -102,6 +113,7 @@ export const SideBarFillTemplate: React.FC<Props> = ({
               )}
               <Button
                 variant="contained"
+                color="primary"
                 type="submit"
                 sx={{ marginTop: '1rem' }}
               >
@@ -111,6 +123,7 @@ export const SideBarFillTemplate: React.FC<Props> = ({
               <Button
                 variant="outlined"
                 onClick={handleResetFile}
+                color="secondary"
                 sx={{ marginTop: '1rem' }}
               >
                 {' '}
@@ -118,24 +131,32 @@ export const SideBarFillTemplate: React.FC<Props> = ({
               </Button>
             </form>
           </Stack>
-        </Stack>
+        </Paper>
       ) : (
-        <Stack sx={StackStyle}>
-          <Typography color="#1b1a1a" component={'h4'} variant="h4">
+        <Paper sx={StackStyle}>
+          <Typography color="text.primary" component={'h4'} variant="h4">
             Gerador de documento
           </Typography>
           <Stack gap={'0.5rem'}>
-            <Typography color="#595959" component={'span'} variant="subtitle2">
-              Faça documentos rápidamente preenchendo apenas palavras
-              ou frases que deseja substituir. Palavras ou frases a serem substituidas devem esta
-              entre dois colchetes &#123;&#123; &#125;&#125;.
+            <Typography
+              color="text.primary"
+              component={'span'}
+              variant="subtitle2"
+            >
+              Faça documentos rápidamente preenchendo apenas palavras ou frases
+              que deseja substituir. Palavras ou frases a serem substituidas
+              devem esta entre dois colchetes &#123;&#123; &#125;&#125;.
             </Typography>
-            <Typography color="#595959" component={'span'} variant="subtitle2">
+            <Typography
+              color="text.secondary"
+              component={'span'}
+              variant="subtitle2"
+            >
               <strong>Exemplo : &#123;&#123;nome_completo&#125;&#125;</strong>
             </Typography>
           </Stack>
           <InputForUploadFile handleFile={handleFile} />
-        </Stack>
+        </Paper>
       )}
     </Drawer>
   );

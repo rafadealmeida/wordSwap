@@ -1,13 +1,11 @@
 'use client';
 
-import Image from 'next/image';
-import styles from './page.module.css';
 import { Button, Paper, Stack, Typography } from '@mui/material';
 import Link from 'next/link';
 
 export default function Home() {
   return (
-    <Stack className={styles.main}>
+    <Stack>
       <Typography component={'h5'} variant="h2">
         Seja bem-vindo ao WordSwap
       </Typography>

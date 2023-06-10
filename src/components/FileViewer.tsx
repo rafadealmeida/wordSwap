@@ -1,5 +1,13 @@
 import { FileObj } from '@/@types/typesFile';
-import { Button, Pagination, Stack, Typography, useTheme } from '@mui/material';
+import {
+  Button,
+  Pagination,
+  Paper,
+  Stack,
+  Typography,
+  useTheme,
+} from '@mui/material';
+import shadows from '@mui/material/styles/shadows';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useState, useEffect } from 'react';
 
@@ -39,34 +47,49 @@ export const FileViewer: React.FC<Props> = ({
   };
 
   return (
-    <Stack
+    <Paper
       sx={{
         width: matches ? '100%' : '50%',
-        backgroundColor: '#fff',
+        backgroundColor: 'background',
         minHeight: text ? '90vh' : 'auto',
         padding: '16px 36px',
+        color: 'text',
         // borderRadius: '10px',
+        display: 'flex',
+        flexDirection:'column',
         justifyContent: 'start',
         alignItems: 'center',
         overflowY: 'scroll',
         margin: '0 auto',
-        boxShadow: '0px 4px 10px rgba(0,0,0,0.5)',
+        // boxShadow: '0px 4px 10px rgba(0,0,0,0.5)',
+        boxShadow: shadows[20],
         gap: '1rem',
       }}
     >
       {file && (
-        <Typography color="black" component={'span'}>
+        <Typography
+          component={'span'}
+          sx={{
+            textAlign: 'center',
+            margin: '0 auto',
+          }}
+        >
           Documento selecionado : {(file as unknown as FileObj).name}
         </Typography>
       )}
       {!file && !conteudo && (
-        <Typography color="black" component={'span'}>
+        <Typography
+          component={'span'}
+          sx={{
+            textAlign: 'center',
+            margin: '0 auto',
+          }}
+        >
           Selecione um documento para continuar
         </Typography>
       )}
       {keys ? (
         <Typography
-          color="black"
           component={'pre'}
           width={'95%'}
           // align="justify"
@@ -89,7 +112,7 @@ export const FileViewer: React.FC<Props> = ({
             count={pageCount}
             page={currentPage}
             onChange={handleChangePage}
-            color="primary"
+            color="secondary"
           />
         </Stack>
       )}
@@ -113,6 +136,6 @@ export const FileViewer: React.FC<Props> = ({
       ) : (
         <></>
       )}
-    </Stack>
+    </Paper>
   );
 };
