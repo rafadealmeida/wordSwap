@@ -1,7 +1,7 @@
 import { FileObj } from '@/@types/typesFile';
 import {
   Button,
-  Pagination,
+  // Pagination,
   Paper,
   Stack,
   Typography,
@@ -9,7 +9,7 @@ import {
 } from '@mui/material';
 import shadows from '@mui/material/styles/shadows';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { useState, useEffect } from 'react';
+// import { useState, useEffect } from 'react';
 
 interface Props {
   keys: String[];
@@ -31,32 +31,45 @@ export const FileViewer: React.FC<Props> = ({
   const theme = useTheme();
   // const matches = useMediaQuery(theme.breakpoints.down('md'));
   const matches = useMediaQuery(theme.breakpoints.down('xl'));
-  const [currentPage, setCurrentPage] = useState(1);
-  const perPage = 4650;
+  // const [currentPage, setCurrentPage] = useState(1);
 
-  const pageCount = Math.ceil(text.length / perPage);
-  const startIndex = (currentPage - 1) * perPage;
-  const endIndex = startIndex + perPage;
-  const renderedText = text.substring(startIndex, endIndex);
+  // const totalChars = text.length;
+  // const targetCharsPerPage = 4500;
+  // const idealPageCount = Math.ceil(totalChars / targetCharsPerPage);
+  // const perPage = Math.ceil(totalChars / idealPageCount);
 
-  const handleChangePage = (
-    event: React.ChangeEvent<unknown>,
-    page: number,
-  ) => {
-    setCurrentPage(page);
-  };
+  // const divideText = (startIndex:number) => {
+  //   const endIndex = text.indexOf('\n', startIndex + perPage);
+  //   if (endIndex !== -1) {
+  //     return text.substring(startIndex, endIndex);
+  //   }
+  //   return text.substring(startIndex);
+  // };
+
+  // const pageCount = Math.ceil(totalChars / perPage);
+  // const startIndex = (currentPage - 1) * perPage;
+  // const renderedText = divideText(startIndex);
+
+  // const handleChangePage = (
+  //   event: React.ChangeEvent<unknown>,
+  //   page: number,
+  // ) => {
+  //   setCurrentPage(page);
+  // };
+
 
   return (
     <Paper
       sx={{
         width: matches ? '100%' : '70%',
         backgroundColor: 'background',
-        minHeight: text ? '90vh' : 'auto',
+        maxHeight: text ? '90vh' : 'auto',
+        // minHeight: text ? '90vh' : 'auto',
         padding: '16px 36px',
         color: 'text',
         // borderRadius: '10px',
         display: 'flex',
-        flexDirection:'column',
+        flexDirection: 'column',
         justifyContent: 'start',
         alignItems: 'center',
         overflowY: 'scroll',
@@ -95,18 +108,20 @@ export const FileViewer: React.FC<Props> = ({
           // align="justify"
           marginTop={'1rem'}
           lineHeight={'1.5rem'}
+          paddingRight={'16px'}
           sx={{
             whiteSpace: 'pre-wrap',
+            overflowY: 'scroll',
           }}
         >
-          {renderedText}
-          {/* {text} */}
+          {/* {renderedText} */}
+          {text}
         </Typography>
       ) : (
         <></>
       )}
 
-      {pageCount > 1 && (
+      {/* {pageCount > 1 && (
         <Stack direction="row" justifyContent="center" marginTop={2}>
           <Pagination
             count={pageCount}
@@ -115,7 +130,7 @@ export const FileViewer: React.FC<Props> = ({
             color="secondary"
           />
         </Stack>
-      )}
+      )} */}
       {file ? (
         <Stack direction={'row'} gap={'1rem'}>
           <Button

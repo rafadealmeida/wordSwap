@@ -1,16 +1,16 @@
 import { NextResponse, NextRequest } from 'next/server';
-import fs from 'fs';
+// import fs from 'fs';
 import WordExtractor from 'word-extractor';
 
 const extractor = new WordExtractor();
 
 const keys = /(?<={{)[^{}]+(?=}})/g;
 
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
+// export const config = {
+//   api: {
+//     bodyParser: false,
+//   },
+// };
 
 export async function POST(req: NextRequest) {
   try {

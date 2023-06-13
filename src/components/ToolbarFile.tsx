@@ -29,7 +29,7 @@ export const ToolBarFile: React.FC<Props> = ({ handleFile, handleCopy ,generateD
           <ContentCopyIcon />
         </IconButton>
       </Tooltip>
-      <Tooltip title="Copiar texto">
+      <Tooltip title="Baixar documento">
         <IconButton onClick={generateDoc} sx={{color:'white'}}>
           <DownloadIcon />
         </IconButton>
