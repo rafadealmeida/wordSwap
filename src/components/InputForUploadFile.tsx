@@ -1,17 +1,14 @@
-import { IconButton, Stack, Typography } from '@mui/material';
-import AttachFileIcon from '@mui/icons-material/AttachFile';
+import { Button, IconButton, Stack, Typography } from '@mui/material';
+
 interface Props {
-  handleFile:(event: React.ChangeEvent<HTMLInputElement>) => void;
+  handleFile: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-export const InputForUploadFile:React.FC<Props> = ({handleFile}) => {
+export const InputForUploadFile: React.FC<Props> = ({ handleFile }) => {
   return (
-    <Stack direction={'row'} alignItems={'center'} gap={'1rem'}>
-      <Typography component="label" id="file" color={'black'} variant="h5">
-        Selecione um Documento:
-      </Typography>
-      <IconButton color="info" component="label" sx={{ width: '5%' }}>
-        <AttachFileIcon fontSize="medium" />
+    <Stack direction={'column'} alignItems={'center'} gap={'0.5rem'}>
+      <Button variant="contained" component="label"  color='primary'>
+        Selecione um Documento
         <input
           hidden
           type="file"
@@ -19,7 +16,10 @@ export const InputForUploadFile:React.FC<Props> = ({handleFile}) => {
           accept=".doc, .docx"
           onChange={handleFile}
         />
-      </IconButton>
+      </Button>
+      <Typography color="text.secondary" component={'p'} variant="subtitle2">
+        Tipo de documentos aceitos : dosc e docx
+      </Typography>
     </Stack>
   );
 };
