@@ -9,6 +9,7 @@ import {
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { InputForUploadFile } from './InputForUploadFile';
 import shadows from '@mui/material/styles/shadows';
+import { ToggleMode } from './patterns/components/ToggleModeTheme';
 
 interface Props {
   keys: string[] | null;
@@ -158,6 +159,9 @@ export const SideBarFillTemplate: React.FC<Props> = ({
           <InputForUploadFile handleFile={handleFile} />
         </Paper>
       )}
+      <Stack alignItems={'center'} position={'fixed'} top={'95%'}>
+        <ToggleMode />
+      </Stack>
     </Drawer>
   );
 };
