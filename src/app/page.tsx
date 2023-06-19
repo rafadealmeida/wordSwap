@@ -1,35 +1,50 @@
 'use client';
 
+import { app } from '@/service/firebase';
 import { Button, Paper, Stack, Typography } from '@mui/material';
-import Link from 'next/link';
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import { useRouter } from 'next/navigation';
+import { cookies } from 'next/headers'
 
-export default function Home() {
+
+const auth = getAuth(app);
+
+export default function Home(props: any) {
+  console.log('props', props);
+  const router = useRouter();
+  const login = async () => {
+    try {
+      const response = await signInWithEmailAndPassword(
+        auth,
+        'rafa@email.com',
+        '123456',
+      );
+
+      console.log(response.user);
+      const user = response.user;
+      router.push('/dashboard');
+    } catch (error: any) {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      console.log(errorCode, errorMessage);
+    }
+  };
   return (
     <Stack>
       <Typography component={'h5'} variant="h2">
         Seja bem-vindo ao WordSwap
       </Typography>
-
-      <Stack
-        direction={'column'}
-        alignItems={'center'}
-        justifyContent={'center'}
-        spacing={4}
-        marginTop={4}
-      >
-        <Typography component={'p'} variant="h5">
-          O que deseja fazer?
-        </Typography>
-
-        <Stack direction={'row'} spacing={2}>
-          <Link href={'/wordSwap'}>
-            <Button variant="contained" size="large">Fazer documento</Button>
-          </Link>
-          <Link href={'#'}>
-            <Button variant="outlined" size="large">Retirar texto de imagem</Button>
-          </Link>
-        </Stack>
-      </Stack>
+      <Button variant="contained" onClick={login}>
+        Login
+      </Button>
     </Stack>
   );
+}
+
+export async function getServerSideProps() {
+  return { props: {
+    params: {
+      teste:'teste'
+    }
+  } };
 }

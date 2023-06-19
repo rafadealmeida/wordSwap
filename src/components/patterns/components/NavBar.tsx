@@ -12,16 +12,16 @@ import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
-import { useTheme } from '@emotion/react';
-import { ThemeContext } from '@/app/layout';
-import { useContext, useState } from 'react';
+import {  useState } from 'react';
+import { ToggleMode } from './ToggleModeTheme';
+
+export const NAV_BAR_HEIGHT = 50
 
 export default function MenuAppBar() {
   const [auth, setAuth] = useState(true);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
-  const themeContext = useContext(ThemeContext);
-  const { darkMode, setDarkMode } = themeContext;
+
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setAuth(event.target.checked);
@@ -34,13 +34,21 @@ export default function MenuAppBar() {
   const handleClose = () => {
     setAnchorEl(null);
   };
-  const handleToogleTheme = (value: boolean) => {
-    setDarkMode(!value);
-  };
 
   return (
-    <Box sx={{ flexGrow: 1 , backgroundColor:'red'}}>
-      <AppBar position="static">
+    <Box
+      sx={{
+        flexGrow: 1,
+        // backgroundColor: 'primary',
+        height: NAV_BAR_HEIGHT,
+        // height: '5vh',
+        alignItems: 'center',
+        ' & .css-hyum1k-MuiToolbar-root': {
+          minHeight: 0,
+        },
+      }}
+    >
+      <AppBar position="static" sx={{height:NAV_BAR_HEIGHT}}>
         <Toolbar>
           {/* <IconButton
             size="large"
@@ -66,13 +74,7 @@ export default function MenuAppBar() {
               label={auth ? 'Logout' : 'Login'}
             />
           </FormGroup> */}
-          <IconButton
-            sx={{ ml: 1 }}
-            onClick={() => handleToogleTheme(darkMode)}
-            color="inherit"
-          >
-            {darkMode === true ? <Brightness7Icon /> : <Brightness4Icon />}
-          </IconButton>
+      <ToggleMode/>
 
           {auth && (
             <div>

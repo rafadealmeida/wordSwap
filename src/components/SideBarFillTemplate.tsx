@@ -159,9 +159,9 @@ export const SideBarFillTemplate: React.FC<Props> = ({
           <InputForUploadFile handleFile={handleFile} />
         </Paper>
       )}
-      <Stack alignItems={'center'} position={'fixed'} top={'95%'}>
+      {/* <Stack alignItems={'center'} position={'fixed'} top={'95%'}>
         <ToggleMode />
-      </Stack>
+      </Stack> */}
     </Drawer>
   );
 };

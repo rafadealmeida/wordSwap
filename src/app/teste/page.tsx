@@ -13,7 +13,6 @@ import { SideBarFillTemplate } from '@/components/SideBarFillTemplate';
 import { FileViewer } from '@/components/FileViewer';
 import { ToolBarFile } from '@/components/ToolbarFile';
 import { InputForUploadFile } from '@/components/InputForUploadFile';
-import { NAV_BAR_HEIGHT } from '@/components/patterns/components/NavBar';
 
 // pdfjs.GlobalWorkerOptions.workerSrc = WORKERSRC;
 const regex = /{{([^{}]+)}}/g;
@@ -131,79 +130,71 @@ export default function BasicCard() {
   const drawerWidth = 540;
 
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        backgroundImage:
-          'linear-gradient(rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.12))',
-        height: '96vh',
-        overflowY:'hidden',
-        // top:'4vh',
-        ' & .css-1fw3wc0-MuiDrawer-docked .css-15b8vjn-MuiPaper-root-MuiDrawer-paper':{
-          top:NAV_BAR_HEIGHT,
-
-        },
-        '& .css-12i7wg6-MuiPaper-root-MuiDrawer-paper':{
-          top:NAV_BAR_HEIGHT,
-        }
-      }}
-    >
-      <AppBar
-        position="fixed"
+    <Stack sx={{top: '2vh', height:'95vh'}}>
+      <Box
         sx={{
-          width: `calc(100% - ${drawerWidth}px)`,
-          ml: `${drawerWidth}px`,
-          top:NAV_BAR_HEIGHT
-          // top: '4%',
+          display: 'flex',
+          backgroundImage:
+            'linear-gradient(rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.12))',
+
         }}
       >
-        <Toolbar
+        <AppBar
+          position="fixed"
           sx={{
-            width: '100%',
-            display: 'flex',
-            justifyContent: 'space-between',
+            width: `calc(100% - ${drawerWidth}px)`,
+            ml: `${drawerWidth}px`,
+            marginTop:'3vh'
           }}
         >
-          {fileName.current ? (
-            <Stack
-              direction={'row'}
-              alignItems={'center'}
-              width="100%"
-              justifyContent={'space-between'}
-            >
-              <Typography variant="h6" noWrap component="div">
-                <strong>{fileName.current}</strong>
+          <Toolbar
+            sx={{
+              width: '100%',
+              display: 'flex',
+              justifyContent: 'space-between',
+            }}
+          >
+            {fileName.current ? (
+              <Stack
+                direction={'row'}
+                alignItems={'center'}
+                width="100%"
+                justifyContent={'space-between'}
+              >
+                <Typography variant="h6" noWrap component="div">
+                  <strong>{fileName.current}</strong>
+                </Typography>
+                <ToolBarFile
+                  handleCopy={handleCopy}
+                  handleFile={handleFile}
+                  generateDoc={generateDoc}
+                />
+              </Stack>
+            ) : (
+              <Typography color="white" component={'span'} variant="h6">
+                Nenhum documento selecionado
               </Typography>
-              <ToolBarFile
-                handleCopy={handleCopy}
-                handleFile={handleFile}
-                generateDoc={generateDoc}
-              />
-            </Stack>
-          ) : (
-            <Typography color="white" component={'span'} variant="h6">
-              Nenhum documento selecionado
-            </Typography>
-          )}
-        </Toolbar>
-      </AppBar>
-      <SideBarFillTemplate
-        keys={keys}
-        onSubmitFn={onSubmitFn}
-        handleFile={handleFile}
-        handleResetFile={handleResetFile}
-      />
-      <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-        <Toolbar />
-        <FileViewer
-          keys={keys as String[]}
-          file={file}
-          upload={upload}
-          text={textRef.current}
-          conteudo={conteudo}
-          handleCancelSendFile={handleCancelSendFile}
+            )}
+          </Toolbar>
+        </AppBar>
+        <SideBarFillTemplate
+          keys={keys}
+          onSubmitFn={onSubmitFn}
+          handleFile={handleFile}
+          handleResetFile={handleResetFile}
         />
+        <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+          <Toolbar />
+          <FileViewer
+            keys={keys as String[]}
+            file={file}
+            upload={upload}
+            text={textRef.current}
+            conteudo={conteudo}
+            handleCancelSendFile={handleCancelSendFile}
+          />
+        </Box>
       </Box>
-    </Box>
+    </Stack>
   );
 }

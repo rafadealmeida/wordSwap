@@ -9,6 +9,7 @@ export const ToggleMode = () => {
   const { darkMode, setDarkMode } = themeContext;
   const handleToogleTheme = (value: boolean) => {
     setDarkMode(!value);
+    localStorage.setItem('USER_THEME_DARK', String(!value))
   };
   return (
     <IconButton

@@ -63,7 +63,7 @@ export const FileViewer: React.FC<Props> = ({
       sx={{
         width: matches ? '100%' : '70%',
         backgroundColor: 'background',
-        maxHeight: text ? '90vh' : 'auto',
+        maxHeight: text ? '85vh' : 'auto',
         // minHeight: text ? '90vh' : 'auto',
         padding: '16px 36px',
         color: 'text',
@@ -107,6 +107,7 @@ export const FileViewer: React.FC<Props> = ({
           width={'95%'}
           // align="justify"
           marginTop={'1rem'}
+          marginBottom={'2rem'}
           lineHeight={'1.5rem'}
           paddingRight={'16px'}
           sx={{
