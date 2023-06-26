@@ -10,6 +10,8 @@ import { darkTheme, ligthTheme } from '@/theme';
 import NavBar from '@/components/patterns/components/NavBar';
 import { createContext, useState, useEffect } from 'react';
 import { ThemeContextType } from '@/@types/typesContext';
+import { AuthContextProvider } from '@/service/firebase/AuthContext';
+import { createCookies, getCookieTheme } from '@/util/createCookies';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -18,25 +20,34 @@ export const metadata = {
   description: 'Faça documentos rápidamente',
 };
 
-const theme = localStorage.getItem('USER_THEME_DARK');
+const getThemeCookies = async (): Promise<string> => {
+  const theme = await getCookieTheme();
+  console.log('cookies', theme?.value);
+  return theme?.value as string;
+};
 
-// @ts-ignore
-export const ThemeContext = createContext<ThemeContextType>(theme === 'true' ? true : false);
+export const ThemeContext = createContext<ThemeContextType | null>(null);
 
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const [darkMode, setDarkMode] = useState<ThemeContextType | boolean>(
-    theme === 'true' ? true : false
-  );
+  const [darkMode, setDarkMode] = useState<ThemeContextType | boolean>(false);
+
+  const checkTheme = async () => {
+    const theme = await getThemeCookies();
+    console.log('theme', theme );
+    console.log('theme verfica:', theme === 'true');
+    if (theme !== null) {
+      const result = theme === 'true' ? true : false;
+      setDarkMode(result);
+    }
+    if (theme === null) createCookies();
+  };
 
   useEffect(() => {
-    if (theme !== null) {
-      setDarkMode(theme === 'true' ? true : false);
-    }
-    if (theme === null) localStorage.setItem('USER_THEME_DARK', 'false');
+    checkTheme();
   }, []);
 
   return (
@@ -48,11 +59,13 @@ export default function RootLayout({
         <Toaster position="top-center" />
         {/*  @ts-ignore */}
         <ThemeContext.Provider value={{ darkMode, setDarkMode }}>
-          <ThemeProvider theme={darkMode ? darkTheme : ligthTheme}>
-            <CssBaseline />
-            <NavBar />
-            {children}
-          </ThemeProvider>
+          <AuthContextProvider>
+            <ThemeProvider theme={darkMode ? darkTheme : ligthTheme}>
+              <CssBaseline />
+              <NavBar />
+              {children}
+            </ThemeProvider>
+          </AuthContextProvider>
         </ThemeContext.Provider>
       </body>
     </html>

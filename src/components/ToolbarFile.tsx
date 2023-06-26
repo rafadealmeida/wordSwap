@@ -7,9 +7,10 @@ interface Props {
   handleFile: (event: React.ChangeEvent<HTMLInputElement>) => void;
   handleCopy: () => void;
   generateDoc: () => Promise<void>
+  generatePDF: () => Promise<void>
 }
 
-export const ToolBarFile: React.FC<Props> = ({ handleFile, handleCopy ,generateDoc}) => {
+export const ToolBarFile: React.FC<Props> = ({ handleFile, handleCopy ,generateDoc, generatePDF}) => {
   return (
     <Stack direction="row" spacing={1} >
       <Tooltip title="Trocar arquivo">
@@ -31,6 +32,11 @@ export const ToolBarFile: React.FC<Props> = ({ handleFile, handleCopy ,generateD
       </Tooltip>
       <Tooltip title="Baixar documento">
         <IconButton onClick={generateDoc} sx={{color:'white'}}>
+          <DownloadIcon />
+        </IconButton>
+      </Tooltip>
+      <Tooltip title="Baixar Pdf">
+        <IconButton onClick={generatePDF} sx={{color:'white'}}>
           <DownloadIcon />
         </IconButton>
       </Tooltip>

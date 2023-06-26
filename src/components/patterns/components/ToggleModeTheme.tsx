@@ -3,13 +3,15 @@ import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
 import { useContext } from 'react';
 import { ThemeContext } from '@/app/layout';
+import { toggleCookiesDark } from '@/util/createCookies';
 
 export const ToggleMode = () => {
   const themeContext = useContext(ThemeContext);
   const { darkMode, setDarkMode } = themeContext;
   const handleToogleTheme = (value: boolean) => {
     setDarkMode(!value);
-    localStorage.setItem('USER_THEME_DARK', String(!value))
+    // localStorage.setItem('USER_THEME_DARK', String(!value))
+    toggleCookiesDark(value)
   };
   return (
     <IconButton

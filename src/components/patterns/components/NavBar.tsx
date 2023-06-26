@@ -2,38 +2,45 @@ import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import IconButton from '@mui/material/IconButton';
-import MenuIcon from '@mui/icons-material/Menu';
-import AccountCircle from '@mui/icons-material/AccountCircle';
-import Switch from '@mui/material/Switch';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import FormGroup from '@mui/material/FormGroup';
-import MenuItem from '@mui/material/MenuItem';
-import Menu from '@mui/material/Menu';
-import Brightness4Icon from '@mui/icons-material/Brightness4';
-import Brightness7Icon from '@mui/icons-material/Brightness7';
-import {  useState } from 'react';
+// import IconButton from '@mui/material/IconButton';
+// import MenuIcon from '@mui/icons-material/Menu';
+// import AccountCircle from '@mui/icons-material/AccountCircle';
+// import Switch from '@mui/material/Switch';
+// import FormControlLabel from '@mui/material/FormControlLabel';
+// import FormGroup from '@mui/material/FormGroup';
+// import MenuItem from '@mui/material/MenuItem';
+// import Menu from '@mui/material/Menu';
+// import Brightness4Icon from '@mui/icons-material/Brightness4';
+// import Brightness7Icon from '@mui/icons-material/Brightness7';
+import { useCallback, useEffect, useState } from 'react';
 import { ToggleMode } from './ToggleModeTheme';
+import { getAuth } from 'firebase/auth';
+import { app } from '@/service/firebase';
 
-export const NAV_BAR_HEIGHT = 50
+const authUser = getAuth(app);
 
-export default function MenuAppBar() {
-  const [auth, setAuth] = useState(true);
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+export const NAV_BAR_HEIGHT = 50;
 
+export default function NavBar() {
+  const [, updateState] = useState<any>();
+  const forceUpdate = useCallback(() => updateState({}), []);
+  setTimeout(() => {
+    forceUpdate();
+  }, 1000);
+  // const [auth, setAuth] = useState(true);
+  // const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
+  // const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   setAuth(event.target.checked);
+  // };
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setAuth(event.target.checked);
-  };
+  // const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
+  //   setAnchorEl(event.currentTarget);
+  // };
 
-  const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
+  // const handleClose = () => {
+  //   setAnchorEl(null);
+  // };
 
   return (
     <Box
@@ -48,7 +55,7 @@ export default function MenuAppBar() {
         },
       }}
     >
-      <AppBar position="static" sx={{height:NAV_BAR_HEIGHT}}>
+      <AppBar position="static" sx={{ height: NAV_BAR_HEIGHT }}>
         <Toolbar>
           {/* <IconButton
             size="large"
@@ -64,19 +71,19 @@ export default function MenuAppBar() {
           </Typography>
           {/* <FormGroup>
             <FormControlLabel
-              control={
-                <Switch
+            control={
+              <Switch
                   checked={auth}
                   onChange={handleChange}
                   aria-label="login switch"
+                  />
+                }
+                label={auth ? 'Logout' : 'Login'}
                 />
-              }
-              label={auth ? 'Logout' : 'Login'}
-            />
-          </FormGroup> */}
-      <ToggleMode/>
+              </FormGroup> */}
+          <ToggleMode />
 
-          {auth && (
+          {/* {auth && (
             <div>
               <IconButton
                 size="large"
@@ -107,6 +114,12 @@ export default function MenuAppBar() {
                 <MenuItem onClick={handleClose}>Sair</MenuItem>
               </Menu>
             </div>
+          )} */}
+
+          {authUser.currentUser && (
+            <Typography variant="h6" component="div">
+              Olá,{authUser.currentUser?.displayName}
+            </Typography>
           )}
         </Toolbar>
       </AppBar>
