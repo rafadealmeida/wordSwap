@@ -11,7 +11,7 @@ import { ResponseText, FileObj } from '../../@types/typesFile';
 import { SideBarFillTemplate } from '@/components/SideBarFillTemplate';
 import { FileViewer } from '@/components/FileViewer';
 import { ToolBarFile } from '@/components/ToolbarFile';
-import { NAV_BAR_HEIGHT } from '@/components/patterns/components/NavBar';
+// import { NAV_BAR_HEIGHT } from '@/components/patterns/components/NavBar';
 import { useAuthContext } from '@/service/firebase/AuthContext';
 import { createPdf } from '@/util/createPdf';
 import { useRouter } from 'next/navigation';
@@ -20,6 +20,7 @@ import { app } from '@/service/firebase';
 
 // pdfjs.GlobalWorkerOptions.workerSrc = WORKERSRC;
 const regex = /{{([^{}]+)}}/g;
+const NAV_BAR_HEIGHT = 50;
 
 export default function BasicCard() {
   const [file, setFile] = useState<string>('');
@@ -162,6 +163,7 @@ export default function BasicCard() {
           'linear-gradient(rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.12))',
         height: '97vh',
         overflowY: 'hidden',
+        top: NAV_BAR_HEIGHT,
         // top:'4vh',
         ' & .css-1fw3wc0-MuiDrawer-docked .css-15b8vjn-MuiPaper-root-MuiDrawer-paper':
           {

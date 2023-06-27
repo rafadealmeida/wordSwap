@@ -22,7 +22,7 @@ export const metadata = {
 
 const getThemeCookies = async (): Promise<string> => {
   const theme = await getCookieTheme();
-  console.log('cookies', theme?.value);
+  // console.log('cookies', theme?.value);
   return theme?.value as string;
 };
 
@@ -33,12 +33,12 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const [darkMode, setDarkMode] = useState<ThemeContextType | boolean>(false);
+  const [darkMode, setDarkMode] = useState<ThemeContextType | boolean>(true);
 
   const checkTheme = async () => {
     const theme = await getThemeCookies();
-    console.log('theme', theme );
-    console.log('theme verfica:', theme === 'true');
+    // console.log('theme', theme );
+    // console.log('theme verfica:', theme === 'true');
     if (theme !== null) {
       const result = theme === 'true' ? true : false;
       setDarkMode(result);

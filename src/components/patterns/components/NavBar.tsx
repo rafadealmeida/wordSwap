@@ -16,10 +16,13 @@ import { useCallback, useEffect, useState } from 'react';
 import { ToggleMode } from './ToggleModeTheme';
 import { getAuth } from 'firebase/auth';
 import { app } from '@/service/firebase';
+import { Avatar } from '@mui/material';
 
 const authUser = getAuth(app);
 
 export const NAV_BAR_HEIGHT = 50;
+
+const LOGO_URL = '/imagens/Logo.png';
 
 export default function NavBar() {
   const [, updateState] = useState<any>();
@@ -46,7 +49,6 @@ export default function NavBar() {
     <Box
       sx={{
         flexGrow: 1,
-        // backgroundColor: 'primary',
         height: NAV_BAR_HEIGHT,
         // height: '5vh',
         alignItems: 'center',
@@ -55,7 +57,10 @@ export default function NavBar() {
         },
       }}
     >
-      <AppBar position="static" sx={{ height: NAV_BAR_HEIGHT }}>
+      <AppBar
+        position="static"
+        sx={{ height: NAV_BAR_HEIGHT }}
+      >
         <Toolbar>
           {/* <IconButton
             size="large"
@@ -66,8 +71,14 @@ export default function NavBar() {
           >
             <MenuIcon />
           </IconButton> */}
+          <Avatar
+            alt="Logo Simplifica Doc"
+            variant="square"
+            src={LOGO_URL}
+            sx={{ width: 24, height: 24 , marginRight:'0.3rem'}}
+          />
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            WordSwap
+            SimplificaDoc
           </Typography>
           {/* <FormGroup>
             <FormControlLabel

@@ -88,7 +88,7 @@ export default function Home() {
         <form onSubmit={handleSubmit(onSubmit)} style={StyleFormFlex}>
           <Stack gap={'0.2rem'} marginBottom={2}>
             <Typography component={'h5'} variant="h3">
-              WordSwap,
+              SimplificaDoc 
             </Typography>
             <Typography component={'span'} variant="subtitle1">
               Faça documentos rápidamente
