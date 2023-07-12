@@ -2,45 +2,65 @@ import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import IconButton from '@mui/material/IconButton';
-import MenuIcon from '@mui/icons-material/Menu';
-import AccountCircle from '@mui/icons-material/AccountCircle';
-import Switch from '@mui/material/Switch';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import FormGroup from '@mui/material/FormGroup';
-import MenuItem from '@mui/material/MenuItem';
-import Menu from '@mui/material/Menu';
-import Brightness4Icon from '@mui/icons-material/Brightness4';
-import Brightness7Icon from '@mui/icons-material/Brightness7';
-import { useTheme } from '@emotion/react';
-import { ThemeContext } from '@/app/layout';
-import { useContext, useState } from 'react';
+// import IconButton from '@mui/material/IconButton';
+// import MenuIcon from '@mui/icons-material/Menu';
+// import AccountCircle from '@mui/icons-material/AccountCircle';
+// import Switch from '@mui/material/Switch';
+// import FormControlLabel from '@mui/material/FormControlLabel';
+// import FormGroup from '@mui/material/FormGroup';
+// import MenuItem from '@mui/material/MenuItem';
+// import Menu from '@mui/material/Menu';
+// import Brightness4Icon from '@mui/icons-material/Brightness4';
+// import Brightness7Icon from '@mui/icons-material/Brightness7';
+import { useCallback, useEffect, useState } from 'react';
+import { ToggleMode } from './ToggleModeTheme';
+import { getAuth } from 'firebase/auth';
+import { app } from '@/service/firebase';
+import { Avatar } from '@mui/material';
 
-export default function MenuAppBar() {
-  const [auth, setAuth] = useState(true);
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+const authUser = getAuth(app);
 
-  const themeContext = useContext(ThemeContext);
-  const { darkMode, setDarkMode } = themeContext;
+export const NAV_BAR_HEIGHT = 50;
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setAuth(event.target.checked);
-  };
+const LOGO_URL = '/imagens/Logo.png';
 
-  const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
+export default function NavBar() {
+  const [, updateState] = useState<any>();
+  const forceUpdate = useCallback(() => updateState({}), []);
+  setTimeout(() => {
+    forceUpdate();
+  }, 1000);
+  // const [auth, setAuth] = useState(true);
+  // const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-  const handleToogleTheme = (value: boolean) => {
-    setDarkMode(!value);
-  };
+  // const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   setAuth(event.target.checked);
+  // };
+
+  // const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
+  //   setAnchorEl(event.currentTarget);
+  // };
+
+  // const handleClose = () => {
+  //   setAnchorEl(null);
+  // };
 
   return (
-    <Box sx={{ flexGrow: 1 , backgroundColor:'red'}}>
-      <AppBar position="static">
+    <Box
+      sx={{
+        flexGrow: 1,
+        height: NAV_BAR_HEIGHT,
+        // height: '5vh',
+        alignItems: 'center',
+        ' & .css-hyum1k-MuiToolbar-root': {
+          minHeight: 0,
+        },
+      }}
+    >
+      <AppBar
+        position="static"
+        sx={{ height: NAV_BAR_HEIGHT }}
+      >
         <Toolbar>
           {/* <IconButton
             size="large"
@@ -51,30 +71,30 @@ export default function MenuAppBar() {
           >
             <MenuIcon />
           </IconButton> */}
+          <Avatar
+            alt="Logo Simplifica Doc"
+            variant="square"
+            src={LOGO_URL}
+            sx={{ width: 24, height: 24 , marginRight:'0.3rem'}}
+          />
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            WordSwap
+            SimplificaDoc
           </Typography>
           {/* <FormGroup>
             <FormControlLabel
-              control={
-                <Switch
+            control={
+              <Switch
                   checked={auth}
                   onChange={handleChange}
                   aria-label="login switch"
+                  />
+                }
+                label={auth ? 'Logout' : 'Login'}
                 />
-              }
-              label={auth ? 'Logout' : 'Login'}
-            />
-          </FormGroup> */}
-          <IconButton
-            sx={{ ml: 1 }}
-            onClick={() => handleToogleTheme(darkMode)}
-            color="inherit"
-          >
-            {darkMode === true ? <Brightness7Icon /> : <Brightness4Icon />}
-          </IconButton>
+              </FormGroup> */}
+          <ToggleMode />
 
-          {auth && (
+          {/* {auth && (
             <div>
               <IconButton
                 size="large"
@@ -105,6 +125,12 @@ export default function MenuAppBar() {
                 <MenuItem onClick={handleClose}>Sair</MenuItem>
               </Menu>
             </div>
+          )} */}
+
+          {authUser.currentUser && (
+            <Typography variant="h6" component="div">
+              Olá,{authUser.currentUser?.displayName}
+            </Typography>
           )}
         </Toolbar>
       </AppBar>

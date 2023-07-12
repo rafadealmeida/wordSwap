@@ -2,20 +2,25 @@
 
 // import { Document, Page, pdfjs } from 'react-pdf';
 import { AppBar, Box, Button, Stack, Toolbar, Typography } from '@mui/material';
-import { useState, useRef, useCallback } from 'react';
+import { useState, useRef, useCallback, useEffect } from 'react';
 import { toast } from 'react-hot-toast';
 import api from '../../service/axiosApi';
 import { SubmitHandler } from 'react-hook-form';
-import { Document, Packer, Paragraph, TextRun } from 'docx';
-
+import { Document, Packer, Paragraph } from 'docx';
 import { ResponseText, FileObj } from '../../@types/typesFile';
 import { SideBarFillTemplate } from '@/components/SideBarFillTemplate';
 import { FileViewer } from '@/components/FileViewer';
 import { ToolBarFile } from '@/components/ToolbarFile';
-import { InputForUploadFile } from '@/components/InputForUploadFile';
+// import { NAV_BAR_HEIGHT } from '@/components/patterns/components/NavBar';
+import { useAuthContext } from '@/service/firebase/AuthContext';
+import { createPdf } from '@/util/createPdf';
+import { useRouter } from 'next/navigation';
+import { getAuth } from 'firebase/auth';
+import { app } from '@/service/firebase';
 
 // pdfjs.GlobalWorkerOptions.workerSrc = WORKERSRC;
 const regex = /{{([^{}]+)}}/g;
+const NAV_BAR_HEIGHT = 50;
 
 export default function BasicCard() {
   const [file, setFile] = useState<string>('');
@@ -24,6 +29,23 @@ export default function BasicCard() {
   const [keys, setKeys] = useState<string[] | null>(null);
   const fileName = useRef('');
   const textRef = useRef('');
+  const router = useRouter();
+  // @ts-ignore
+  const { user } = useAuthContext();
+  const authUser = getAuth(app);
+
+  useEffect(() => {
+    setTimeout(() => {
+      if (authUser?.currentUser === null) router.push('/');
+    }, 1000);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [authUser]);
+  // useEffect(() => {
+  //   if (user === null) router.push('/');
+
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [user]);
 
   const forceUpdate = useCallback(() => updateState({}), []);
 
@@ -118,6 +140,10 @@ export default function BasicCard() {
     link.remove();
   };
 
+  const generatePDF = async () => {
+    await createPdf({text:textRef.current},{filename:fileName.current})
+  }
+
   const handleCopy = () => {
     navigator.clipboard.writeText(textRef.current).then(() => {
       toast.success('Texto Copiado com sucesso');
@@ -135,7 +161,17 @@ export default function BasicCard() {
         display: 'flex',
         backgroundImage:
           'linear-gradient(rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.12))',
-        height: '100vh',
+        height: '97vh',
+        overflowY: 'hidden',
+        top: NAV_BAR_HEIGHT,
+        // top:'4vh',
+        ' & .css-1fw3wc0-MuiDrawer-docked .css-15b8vjn-MuiPaper-root-MuiDrawer-paper':
+          {
+            top: NAV_BAR_HEIGHT,
+          },
+        '& .css-12i7wg6-MuiPaper-root-MuiDrawer-paper': {
+          top: NAV_BAR_HEIGHT,
+        },
       }}
     >
       <AppBar
@@ -143,6 +179,7 @@ export default function BasicCard() {
         sx={{
           width: `calc(100% - ${drawerWidth}px)`,
           ml: `${drawerWidth}px`,
+          top: NAV_BAR_HEIGHT,
           // top: '4%',
         }}
       >
@@ -167,6 +204,7 @@ export default function BasicCard() {
                 handleCopy={handleCopy}
                 handleFile={handleFile}
                 generateDoc={generateDoc}
+                generatePDF={generatePDF}
               />
             </Stack>
           ) : (

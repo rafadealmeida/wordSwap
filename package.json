@@ -1,6 +1,6 @@
 {
-  "name": "wordswap",
-  "version": "0.3.0",
+  "name": "simplificadoc",
+  "version": "0.4.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -14,6 +14,7 @@
     "@emotion/server": "latest",
     "@emotion/styled": "latest",
     "@faker-js/faker": "latest",
+    "@hookform/resolvers": "^3.1.1",
     "@mui/icons-material": "latest",
     "@mui/lab": "latest",
     "@mui/material": "latest",
@@ -24,14 +25,16 @@
     "docx": "^8.0.4",
     "eslint": "8.40.0",
     "eslint-config-next": "13.4.2",
+    "firebase": "^9.22.2",
     "next": "13.4.2",
+    "pdf-lib": "^1.17.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-hook-form": "^7.43.9",
     "react-hot-toast": "^2.4.1",
     "typescript": "5.0.4",
     "word-extractor": "^1.0.4",
-    "yup": "^1.1.1"
+    "yup": "^1.2.0"
   },
   "devDependencies": {
     "@types/word-extractor": "^1.0.1"
