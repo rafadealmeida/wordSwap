@@ -1,7 +1,18 @@
 'use client';
 
 import { app } from '@/service/firebase';
-import { Button, Paper, Stack, TextField, Typography } from '@mui/material';
+import {
+  Button,
+  FormControl,
+  IconButton,
+  InputAdornment,
+  InputLabel,
+  OutlinedInput,
+  Paper,
+  Stack,
+  TextField,
+  Typography,
+} from '@mui/material';
 import {
   getAuth,
   signInWithEmailAndPassword,
@@ -15,6 +26,7 @@ import * as yup from 'yup';
 import { UpdateName } from '@/components/Modal/UpdateName';
 import { CSSProperties, useState } from 'react';
 import shadows from '@mui/material/styles/shadows';
+import { VisibilityOff, Visibility } from '@mui/icons-material';
 
 const auth = getAuth(app);
 
@@ -43,6 +55,8 @@ const StyleFormFlex: CSSProperties = {
 
 export default function Home() {
   const [openNameModal, setOpenNameModal] = useState<boolean>(false);
+  const [showPassword, setShowPassword] = useState(false);
+
   const router = useRouter();
   const {
     register,
@@ -62,7 +76,7 @@ export default function Home() {
 
       const user = response.user;
 
-      if (response.user.displayName === null) {
+      if (user.displayName === null) {
         setOpenNameModal(true);
       } else {
         // router.push('/dashboard');
@@ -74,6 +88,14 @@ export default function Home() {
       console.log(errorCode, errorMessage);
     }
   };
+
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
+  const handleMouseDownPassword = (
+    event: React.MouseEvent<HTMLButtonElement>,
+  ) => {
+    event.preventDefault();
+  };
+
   return (
     <Stack justifyContent={'center'} alignItems={'center'} height={'97vh'}>
       <Paper
@@ -88,7 +110,7 @@ export default function Home() {
         <form onSubmit={handleSubmit(onSubmit)} style={StyleFormFlex}>
           <Stack gap={'0.2rem'} marginBottom={2}>
             <Typography component={'h5'} variant="h3">
-              SimplificaDoc 
+              SimplificaDoc
             </Typography>
             <Typography component={'span'} variant="subtitle1">
               Faça documentos rápidamente
@@ -115,12 +137,29 @@ export default function Home() {
             control={control}
             key="senha_login"
             render={({ field }) => (
-              <TextField
-                label="Senha"
-                variant="outlined"
-                fullWidth
-                {...field}
-              />
+              <FormControl variant="outlined">
+                <InputLabel htmlFor="outlined-adornment-password">
+                  Senha
+                </InputLabel>
+                <OutlinedInput
+                  id="outlined-adornment-password"
+                  type={showPassword ? 'text' : 'password'}
+                  endAdornment={
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={handleClickShowPassword}
+                        onMouseDown={handleMouseDownPassword}
+                        edge="end"
+                      >
+                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  }
+                  label="Senha"
+                  {...field}
+                />
+              </FormControl>
             )}
           />
           <Typography variant="subtitle2" color="error">

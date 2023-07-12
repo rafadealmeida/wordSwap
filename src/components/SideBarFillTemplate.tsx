@@ -117,18 +117,24 @@ export const SideBarFillTemplate: React.FC<Props> = ({
                 type="submit"
                 sx={{ marginTop: '1rem' }}
               >
-                {' '}
                 Substituir Palavras
               </Button>
               <Button
                 variant="outlined"
                 onClick={handleResetFile}
                 color="secondary"
-                sx={{ marginTop: '1rem' }}
               >
-                {' '}
                 Resetar Documento
               </Button>
+              <Typography
+                color="text.primary"
+                component={'span'}
+                variant="subtitle2"
+                sx={{ textAlign: 'center' }}
+              >
+                ou
+              </Typography>
+              <InputForUploadFile handleFile={handleFile} />
             </form>
           </Stack>
         </Paper>
