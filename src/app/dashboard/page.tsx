@@ -1,10 +1,12 @@
 'use client';
 
+import { ThemeAndCssProvider } from '@/components/patterns/components/ThemeAndCssProvider';
 import { Button, Stack, Typography } from '@mui/material';
 import Link from 'next/link';
 
 export default function Dashboard() {
   return (
+    <ThemeAndCssProvider>
     <Stack>
       <Typography component={'h5'} variant="h2">
         Seja bem-vindo ao WordSwap
@@ -31,5 +33,6 @@ export default function Dashboard() {
         </Stack>
       </Stack>
     </Stack>
+    </ThemeAndCssProvider>
   );
 }

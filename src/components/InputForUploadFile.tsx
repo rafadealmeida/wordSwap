@@ -1,3 +1,5 @@
+'use client';
+
 import { Button, IconButton, Stack, Typography } from '@mui/material';
 
 interface Props {

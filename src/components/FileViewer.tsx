@@ -1,3 +1,5 @@
+'use client';
+
 import { FileObj } from '@/@types/typesFile';
 import {
   Button,

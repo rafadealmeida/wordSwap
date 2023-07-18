@@ -17,6 +17,7 @@ import { createPdf } from '@/util/createPdf';
 import { useRouter } from 'next/navigation';
 import { getAuth } from 'firebase/auth';
 import { app } from '@/service/firebase';
+import { ThemeAndCssProvider } from '@/components/patterns/components/ThemeAndCssProvider';
 
 // pdfjs.GlobalWorkerOptions.workerSrc = WORKERSRC;
 const regex = /{{([^{}]+)}}/g;
@@ -156,6 +157,7 @@ export default function BasicCard() {
   const drawerWidth = 540;
 
   return (
+    <ThemeAndCssProvider>
     <Box
       sx={{
         display: 'flex',
@@ -232,5 +234,6 @@ export default function BasicCard() {
         />
       </Box>
     </Box>
+    </ThemeAndCssProvider>
   );
 }
