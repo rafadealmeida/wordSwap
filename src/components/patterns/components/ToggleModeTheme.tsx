@@ -1,13 +1,15 @@
+'use client';
+
 import IconButton from '@mui/material/IconButton/IconButton';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
 import { useContext } from 'react';
-import { ThemeContext } from '@/app/layout';
+import { ThemeCreateContext } from '@/util/createThemeProvider';
 import { toggleCookiesDark } from '@/util/createCookies';
 import { ThemeContextType } from '@/@types/typesContext';
 
 export const ToggleMode = () => {
-  const themeContext = useContext(ThemeContext) as ThemeContextType;
+  const themeContext = useContext(ThemeCreateContext) as ThemeContextType;
   const { darkMode, setDarkMode } = themeContext;
   const handleToogleTheme = (value: boolean) => {
     if (setDarkMode) {

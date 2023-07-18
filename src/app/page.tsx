@@ -27,6 +27,7 @@ import { UpdateName } from '@/components/Modal/UpdateName';
 import { CSSProperties, useState } from 'react';
 import shadows from '@mui/material/styles/shadows';
 import { VisibilityOff, Visibility } from '@mui/icons-material';
+import { ThemeAndCssProvider } from '@/components/patterns/components/ThemeAndCssProvider';
 
 const auth = getAuth(app);
 
@@ -97,81 +98,83 @@ export default function Home() {
   };
 
   return (
-    <Stack justifyContent={'center'} alignItems={'center'} height={'97vh'}>
-      <Paper
-        sx={{
-          width: 500,
-          padding: 8,
-          borderRadius: '1rem',
-          boxShadow: shadows[20],
-          // margin: '1rem auto',
-        }}
-      >
-        <form onSubmit={handleSubmit(onSubmit)} style={StyleFormFlex}>
-          <Stack gap={'0.2rem'} marginBottom={2}>
-            <Typography component={'h5'} variant="h3">
-              SimplificaDoc
-            </Typography>
-            <Typography component={'span'} variant="subtitle1">
-              Faça documentos rápidamente
-            </Typography>
-          </Stack>
-          <Controller
-            control={control}
-            key="email_login"
-            {...register('email')}
-            render={({ field }) => (
-              <TextField
-                label="Email"
-                variant="outlined"
-                fullWidth
-                {...field}
-              />
-            )}
-          />
-          <Typography variant="subtitle2" color="error">
-            {errors.email?.message}
-          </Typography>
-          <Controller
-            {...register('password')}
-            control={control}
-            key="senha_login"
-            render={({ field }) => (
-              <FormControl variant="outlined">
-                <InputLabel htmlFor="outlined-adornment-password">
-                  Senha
-                </InputLabel>
-                <OutlinedInput
-                  id="outlined-adornment-password"
-                  type={showPassword ? 'text' : 'password'}
-                  endAdornment={
-                    <InputAdornment position="end">
-                      <IconButton
-                        aria-label="toggle password visibility"
-                        onClick={handleClickShowPassword}
-                        onMouseDown={handleMouseDownPassword}
-                        edge="end"
-                      >
-                        {showPassword ? <VisibilityOff /> : <Visibility />}
-                      </IconButton>
-                    </InputAdornment>
-                  }
-                  label="Senha"
+    <ThemeAndCssProvider>
+      <Stack justifyContent={'center'} alignItems={'center'} height={'97vh'}>
+        <Paper
+          sx={{
+            width: 500,
+            padding: 8,
+            borderRadius: '1rem',
+            boxShadow: shadows[20],
+            // margin: '1rem auto',
+          }}
+        >
+          <form onSubmit={handleSubmit(onSubmit)} style={StyleFormFlex}>
+            <Stack gap={'0.2rem'} marginBottom={2}>
+              <Typography component={'h5'} variant="h3">
+                SimplificaDoc
+              </Typography>
+              <Typography component={'span'} variant="subtitle1">
+                Faça documentos rápidamente
+              </Typography>
+            </Stack>
+            <Controller
+              control={control}
+              key="email_login"
+              {...register('email')}
+              render={({ field }) => (
+                <TextField
+                  label="Email"
+                  variant="outlined"
+                  fullWidth
                   {...field}
                 />
-              </FormControl>
-            )}
-          />
-          <Typography variant="subtitle2" color="error">
-            {errors.password?.message}
-          </Typography>
+              )}
+            />
+            <Typography variant="subtitle2" color="error">
+              {errors.email?.message}
+            </Typography>
+            <Controller
+              {...register('password')}
+              control={control}
+              key="senha_login"
+              render={({ field }) => (
+                <FormControl variant="outlined">
+                  <InputLabel htmlFor="outlined-adornment-password">
+                    Senha
+                  </InputLabel>
+                  <OutlinedInput
+                    id="outlined-adornment-password"
+                    type={showPassword ? 'text' : 'password'}
+                    endAdornment={
+                      <InputAdornment position="end">
+                        <IconButton
+                          aria-label="toggle password visibility"
+                          onClick={handleClickShowPassword}
+                          onMouseDown={handleMouseDownPassword}
+                          edge="end"
+                        >
+                          {showPassword ? <VisibilityOff /> : <Visibility />}
+                        </IconButton>
+                      </InputAdornment>
+                    }
+                    label="Senha"
+                    {...field}
+                  />
+                </FormControl>
+              )}
+            />
+            <Typography variant="subtitle2" color="error">
+              {errors.password?.message}
+            </Typography>
 
-          <UpdateName open={openNameModal} setOpen={setOpenNameModal} />
-          <Button variant="contained" type="submit">
-            Login
-          </Button>
-        </form>
-      </Paper>
-    </Stack>
+            <UpdateName open={openNameModal} setOpen={setOpenNameModal} />
+            <Button variant="contained" type="submit">
+              Login
+            </Button>
+          </form>
+        </Paper>
+      </Stack>
+    </ThemeAndCssProvider>
   );
 }

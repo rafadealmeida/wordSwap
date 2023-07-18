@@ -1,3 +1,5 @@
+'use client';
+
 import { IconButton, Stack, Tooltip } from '@mui/material';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';

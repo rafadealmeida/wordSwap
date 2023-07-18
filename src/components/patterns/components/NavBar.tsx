@@ -1,3 +1,5 @@
+'use client';
+
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -61,7 +63,7 @@ export default function NavBar() {
         position="static"
         sx={{ height: NAV_BAR_HEIGHT }}
       >
-        <Toolbar>
+        <Toolbar sx={{marginTop:-1}}>
           {/* <IconButton
             size="large"
             edge="start"
@@ -92,7 +94,7 @@ export default function NavBar() {
                 label={auth ? 'Logout' : 'Login'}
                 />
               </FormGroup> */}
-          <ToggleMode />
+          {/* <ToggleMode /> */}
 
           {/* {auth && (
             <div>
