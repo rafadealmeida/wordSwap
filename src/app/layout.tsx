@@ -1,4 +1,3 @@
-
 // import './globals.css';
 
 import { Inter } from 'next/font/google';
@@ -12,7 +11,7 @@ const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
   title: 'Simplifica Doc',
-  description: 'Faça documentos rápidamente',
+  description: 'Faça documentos rápido',
 };
 
 export default function RootLayout({
