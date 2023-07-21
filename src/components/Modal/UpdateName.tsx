@@ -40,7 +40,7 @@ export const UpdateName: React.FC<Props> = ({ open, setOpen }) => {
         displayName: name,
       });
       toast.success('Nome alterado com sucesso');
-      router.push('/dashboard');
+      router.push('/wordSwap');
     } catch (error) {
       console.log(error);
       toast.error('Algo deu errado ao atualizar o nome do usuário');
