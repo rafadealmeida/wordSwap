@@ -163,7 +163,7 @@ export default function BasicCard() {
         display: 'flex',
         backgroundImage:
           'linear-gradient(rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.12))',
-        height: '97vh',
+        height: '96.8vh',
         overflowY: 'hidden',
         top: NAV_BAR_HEIGHT,
         // top:'4vh',
