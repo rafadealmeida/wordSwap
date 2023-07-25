@@ -74,7 +74,7 @@ export const FileViewer: React.FC<Props> = ({
         flexDirection: 'column',
         justifyContent: 'start',
         alignItems: 'center',
-        overflowY: 'scroll',
+        // overflowY: 'scroll',
         margin: '0 auto',
         // boxShadow: '0px 4px 10px rgba(0,0,0,0.5)',
         boxShadow: shadows[20],
