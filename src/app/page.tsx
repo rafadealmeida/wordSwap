@@ -1,6 +1,6 @@
 'use client';
 
-import { app } from '@/service/firebase';
+import { app, db } from '@/service/firebase';
 import {
   Button,
   FormControl,
@@ -30,8 +30,12 @@ import { VisibilityOff, Visibility } from '@mui/icons-material';
 import { ThemeAndCssProvider } from '@/components/patterns/components/ThemeAndCssProvider';
 import Lottie from 'lottie-react';
 import LoadingGif from '../../public/imagens/LoadingGif.json';
+// import { getFirestore } from 'firebase/firestore';
+// import { collection, doc, setDoc } from 'firebase/firestore';
+import { saveUserFirstTime } from '@/util/saveUserFirstTime';
 
 const auth = getAuth(app);
+// const db = getFirestore(app);
 
 interface FormData {
   email: string;
@@ -58,8 +62,8 @@ const StyleFormFlex: CSSProperties = {
 
 export default function Home() {
   const [openNameModal, setOpenNameModal] = useState<boolean>(false);
-  const [showPassword, setShowPassword] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const router = useRouter();
   const {
@@ -80,15 +84,15 @@ export default function Home() {
       const response = await signInWithEmailAndPassword(auth, email, senha);
 
       const user = response.user;
+      const uid = user.uid;
 
       if (user.displayName === null) {
         setOpenNameModal(true);
         setLoading(false);
       } else {
-        // router.push('/dashboard');
         router.push('/wordSwap');
+        // await saveUserFirstTime(uid, (user.email as string), user.displayName)
 
-        // setLoading(false);
       }
     } catch (error: any) {
       const errorCode = error.code;
