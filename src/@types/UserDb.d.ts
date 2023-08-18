@@ -3,4 +3,5 @@ interface UserDb {
   name: string;
   isDemo: boolean;
   isPremium: boolean;
+  attemptDemo:number
 }

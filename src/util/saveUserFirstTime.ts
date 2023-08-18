@@ -13,5 +13,6 @@ export const saveUserFirstTime = async (
     name: displayName,
     isDemo: false,
     isPremium: false,
+    attemptDemo: 10,
   });
 };

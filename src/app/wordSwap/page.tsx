@@ -84,7 +84,7 @@ export default function BasicCard() {
       setKeys(null);
       setFile(file);
     } else if (!checkUser) {
-      toast.error('Usuários sem permissão!');
+      toast.error('Usuários sem permissão. Atualize conta ou plano para prosseguir.');
     } else {
       toast.error('Arquivo não suportado');
     }
