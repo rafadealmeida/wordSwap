@@ -14,6 +14,7 @@ import { User, getAuth, updateProfile } from 'firebase/auth';
 import { app } from '@/service/firebase';
 import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
+import { saveUserFirstTime } from '@/util/saveUserFirstTime';
 
 const auth = getAuth(app);
 
@@ -34,12 +35,17 @@ export const UpdateName: React.FC<Props> = ({ open, setOpen }) => {
   const [name, setName] = React.useState('');
   const router = useRouter();
 
-  const upadateNameUser = () => {
+  const upadateNameUser = async () => {
     try {
       updateProfile(auth.currentUser as User, {
         displayName: name,
       });
       toast.success('Nome alterado com sucesso');
+      await saveUserFirstTime(
+        auth.currentUser?.uid as string,
+        auth.currentUser?.email as string,
+        name as string,
+      );
       router.push('/wordSwap');
     } catch (error) {
       console.log(error);
@@ -80,8 +86,12 @@ export const UpdateName: React.FC<Props> = ({ open, setOpen }) => {
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} color='error' variant='outlined'>Cancelar</Button>
-          <Button onClick={upadateNameUser} color='success' variant='contained'>Confirmar</Button>
+          <Button onClick={handleClose} color="error" variant="outlined">
+            Cancelar
+          </Button>
+          <Button onClick={upadateNameUser} color="success" variant="contained">
+            Confirmar
+          </Button>
         </DialogActions>
       </Dialog>
     </div>

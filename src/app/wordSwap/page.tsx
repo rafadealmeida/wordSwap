@@ -18,8 +18,10 @@ import { useRouter } from 'next/navigation';
 import { getAuth } from 'firebase/auth';
 import { app } from '@/service/firebase';
 import { ThemeAndCssProvider } from '@/components/patterns/components/ThemeAndCssProvider';
+import { checkUserIsAccess } from '@/util/checkUserIsAccess';
+import { checkUserIsDemo } from '@/util/checkUserIsDemo';
+import { checkUserIsDemoCopyDoc } from '@/util/checkUserIsDemoCopyDoc';
 
-// pdfjs.GlobalWorkerOptions.workerSrc = WORKERSRC;
 const regex = /{{([^{}]+)}}/g;
 const NAV_BAR_HEIGHT = 50;
 
@@ -34,6 +36,7 @@ export default function BasicCard() {
   // @ts-ignore
   const { user } = useAuthContext();
   const authUser = getAuth(app);
+
 
   useEffect(() => {
     setTimeout(() => {
@@ -63,20 +66,28 @@ export default function BasicCard() {
     // setConteudo(newText);
   };
 
-  const handleFile = (event: any): void => {
+  const handleFile = async (event: any): Promise<void> => {
     // setConteudo('');
     // textRef.current = '';
     // setKeys(null);
     const file = event.target?.files[0];
+    const checkUser = await checkUserIsAccess(user.uid);
     if (
-      file.type ===
+      (file.type ===
         'application/vnd.openxmlformats-officedocument.wordprocessingml.document' ||
-      file.type === 'application/msword'
+        file.type === 'application/msword') &&
+      checkUser
     ) {
       setConteudo('');
+      // checkUserIsAccess()
+
       textRef.current = '';
       setKeys(null);
       setFile(file);
+    } else if (!checkUser) {
+      toast.error(
+        'Usuários sem permissão. Atualize conta ou plano para prosseguir.',
+      );
     } else {
       toast.error('Arquivo não suportado');
     }
@@ -116,39 +127,49 @@ export default function BasicCard() {
   };
 
   const generateDoc = async (): Promise<void> => {
-    const textParagraph = textRef.current.split('\n');
-    const doc = new Document({
-      sections: [
-        {
-          properties: {},
-          children: textParagraph.map(
-            (paragraph) =>
-              new Paragraph({
-                text: paragraph,
-              }),
-          ),
-        },
-      ],
-    });
+    const checkUserisDemo = await checkUserIsDemo(user.uid);
+    if (!checkUserisDemo) {
+      toast('Você excedeu o limite de uso deste recurso em contas demo');
+    } else {
+      const textParagraph = textRef.current.split('\n');
+      const doc = new Document({
+        sections: [
+          {
+            properties: {},
+            children: textParagraph.map(
+              (paragraph) =>
+                new Paragraph({
+                  text: paragraph,
+                }),
+            ),
+          },
+        ],
+      });
 
-    const docBlob = await Packer.toBlob(doc);
-    const urlLink = window.URL.createObjectURL(docBlob);
-    const link = document.createElement('a');
-    link.href = urlLink;
-    link.setAttribute('download', fileName.current);
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
+      const docBlob = await Packer.toBlob(doc);
+      const urlLink = window.URL.createObjectURL(docBlob);
+      const link = document.createElement('a');
+      link.href = urlLink;
+      link.setAttribute('download', fileName.current);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    }
   };
 
   const generatePDF = async () => {
-    await createPdf({text:textRef.current},{filename:fileName.current})
-  }
+    await createPdf({ text: textRef.current }, { filename: fileName.current });
+  };
 
-  const handleCopy = () => {
-    navigator.clipboard.writeText(textRef.current).then(() => {
-      toast.success('Texto Copiado com sucesso');
-    });
+  const handleCopy = async () => {
+    const checkUserisDemoForCopyText = await checkUserIsDemoCopyDoc(user.uid);
+    if(checkUserisDemoForCopyText){
+      navigator.clipboard.writeText(textRef.current).then(() => {
+        toast.success('Texto Copiado com sucesso');
+      });
+    } else{
+      toast('Você excedeu o limite de uso deste recurso em contas demo');
+    }
   };
   const handleCancelSendFile = () => {
     setFile('');
@@ -158,82 +179,82 @@ export default function BasicCard() {
 
   return (
     <ThemeAndCssProvider>
-    <Box
-      sx={{
-        display: 'flex',
-        backgroundImage:
-          'linear-gradient(rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.12))',
-        height: '97vh',
-        overflowY: 'hidden',
-        top: NAV_BAR_HEIGHT,
-        // top:'4vh',
-        ' & .css-1fw3wc0-MuiDrawer-docked .css-15b8vjn-MuiPaper-root-MuiDrawer-paper':
-          {
+      <Box
+        sx={{
+          display: 'flex',
+          backgroundImage:
+            'linear-gradient(rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.12))',
+          height: '96.8vh',
+          overflowY: 'hidden',
+          top: NAV_BAR_HEIGHT,
+          // top:'4vh',
+          ' & .css-1fw3wc0-MuiDrawer-docked .css-15b8vjn-MuiPaper-root-MuiDrawer-paper':
+            {
+              top: NAV_BAR_HEIGHT,
+            },
+          '& .css-12i7wg6-MuiPaper-root-MuiDrawer-paper': {
             top: NAV_BAR_HEIGHT,
           },
-        '& .css-12i7wg6-MuiPaper-root-MuiDrawer-paper': {
-          top: NAV_BAR_HEIGHT,
-        },
-      }}
-    >
-      <AppBar
-        position="fixed"
-        sx={{
-          width: `calc(100% - ${drawerWidth}px)`,
-          ml: `${drawerWidth}px`,
-          top: NAV_BAR_HEIGHT,
-          // top: '4%',
         }}
       >
-        <Toolbar
+        <AppBar
+          position="fixed"
           sx={{
-            width: '100%',
-            display: 'flex',
-            justifyContent: 'space-between',
+            width: `calc(100% - ${drawerWidth}px)`,
+            ml: `${drawerWidth}px`,
+            top: NAV_BAR_HEIGHT,
+            // top: '4%',
           }}
         >
-          {fileName.current ? (
-            <Stack
-              direction={'row'}
-              alignItems={'center'}
-              width="100%"
-              justifyContent={'space-between'}
-            >
-              <Typography variant="h6" noWrap component="div">
-                <strong>{fileName.current}</strong>
+          <Toolbar
+            sx={{
+              width: '100%',
+              display: 'flex',
+              justifyContent: 'space-between',
+            }}
+          >
+            {fileName.current ? (
+              <Stack
+                direction={'row'}
+                alignItems={'center'}
+                width="100%"
+                justifyContent={'space-between'}
+              >
+                <Typography variant="h6" noWrap component="div">
+                  <strong>{fileName.current}</strong>
+                </Typography>
+                <ToolBarFile
+                  handleCopy={handleCopy}
+                  handleFile={handleFile}
+                  generateDoc={generateDoc}
+                  generatePDF={generatePDF}
+                />
+              </Stack>
+            ) : (
+              <Typography color="white" component={'span'} variant="h6">
+                Nenhum documento selecionado
               </Typography>
-              <ToolBarFile
-                handleCopy={handleCopy}
-                handleFile={handleFile}
-                generateDoc={generateDoc}
-                generatePDF={generatePDF}
-              />
-            </Stack>
-          ) : (
-            <Typography color="white" component={'span'} variant="h6">
-              Nenhum documento selecionado
-            </Typography>
-          )}
-        </Toolbar>
-      </AppBar>
-      <SideBarFillTemplate
-        keys={keys}
-        onSubmitFn={onSubmitFn}
-        handleFile={handleFile}
-        handleResetFile={handleResetFile}
-      />
-      <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-        <Toolbar />
-        <FileViewer
-          keys={keys as String[]}
-          file={file}
-          upload={upload}
-          text={textRef.current}
-          conteudo={conteudo}
-          handleCancelSendFile={handleCancelSendFile}
+            )}
+          </Toolbar>
+        </AppBar>
+        <SideBarFillTemplate
+          keys={keys}
+          onSubmitFn={onSubmitFn}
+          handleFile={handleFile}
+          handleResetFile={handleResetFile}
         />
+        <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+          <Toolbar />
+          <FileViewer
+            keys={keys as String[]}
+            file={file}
+            upload={upload}
+            text={textRef.current}
+            conteudo={conteudo}
+            handleCancelSendFile={handleCancelSendFile}
+          />
+        </Box>
       </Box>
-    </Box>
     </ThemeAndCssProvider>
   );
 }

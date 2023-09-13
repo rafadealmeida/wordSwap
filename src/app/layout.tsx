@@ -1,4 +1,5 @@
 // import './globals.css';
+import './scrollbar.css';
 
 import { Inter } from 'next/font/google';
 import Head from 'next/head';
