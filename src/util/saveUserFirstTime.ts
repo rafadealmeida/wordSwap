@@ -14,5 +14,7 @@ export const saveUserFirstTime = async (
     isDemo: false,
     isPremium: false,
     attemptDemo: 10,
+    attemptDemoGenerateDoc: 10,
+    attemptDemoCopyDoc: 10,
   });
 };

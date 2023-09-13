@@ -19,6 +19,8 @@ import { getAuth } from 'firebase/auth';
 import { app } from '@/service/firebase';
 import { ThemeAndCssProvider } from '@/components/patterns/components/ThemeAndCssProvider';
 import { checkUserIsAccess } from '@/util/checkUserIsAccess';
+import { checkUserIsDemo } from '@/util/checkUserIsDemo';
+import { checkUserIsDemoCopyDoc } from '@/util/checkUserIsDemoCopyDoc';
 
 const regex = /{{([^{}]+)}}/g;
 const NAV_BAR_HEIGHT = 50;
@@ -35,7 +37,6 @@ export default function BasicCard() {
   const { user } = useAuthContext();
   const authUser = getAuth(app);
 
-  console.log(user?.uid);
 
   useEffect(() => {
     setTimeout(() => {
@@ -84,7 +85,9 @@ export default function BasicCard() {
       setKeys(null);
       setFile(file);
     } else if (!checkUser) {
-      toast.error('Usuários sem permissão. Atualize conta ou plano para prosseguir.');
+      toast.error(
+        'Usuários sem permissão. Atualize conta ou plano para prosseguir.',
+      );
     } else {
       toast.error('Arquivo não suportado');
     }
@@ -124,39 +127,49 @@ export default function BasicCard() {
   };
 
   const generateDoc = async (): Promise<void> => {
-    const textParagraph = textRef.current.split('\n');
-    const doc = new Document({
-      sections: [
-        {
-          properties: {},
-          children: textParagraph.map(
-            (paragraph) =>
-              new Paragraph({
-                text: paragraph,
-              }),
-          ),
-        },
-      ],
-    });
+    const checkUserisDemo = await checkUserIsDemo(user.uid);
+    if (!checkUserisDemo) {
+      toast('Você excedeu o limite de uso deste recurso em contas demo');
+    } else {
+      const textParagraph = textRef.current.split('\n');
+      const doc = new Document({
+        sections: [
+          {
+            properties: {},
+            children: textParagraph.map(
+              (paragraph) =>
+                new Paragraph({
+                  text: paragraph,
+                }),
+            ),
+          },
+        ],
+      });
 
-    const docBlob = await Packer.toBlob(doc);
-    const urlLink = window.URL.createObjectURL(docBlob);
-    const link = document.createElement('a');
-    link.href = urlLink;
-    link.setAttribute('download', fileName.current);
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
+      const docBlob = await Packer.toBlob(doc);
+      const urlLink = window.URL.createObjectURL(docBlob);
+      const link = document.createElement('a');
+      link.href = urlLink;
+      link.setAttribute('download', fileName.current);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    }
   };
 
   const generatePDF = async () => {
     await createPdf({ text: textRef.current }, { filename: fileName.current });
   };
 
-  const handleCopy = () => {
-    navigator.clipboard.writeText(textRef.current).then(() => {
-      toast.success('Texto Copiado com sucesso');
-    });
+  const handleCopy = async () => {
+    const checkUserisDemoForCopyText = await checkUserIsDemoCopyDoc(user.uid);
+    if(checkUserisDemoForCopyText){
+      navigator.clipboard.writeText(textRef.current).then(() => {
+        toast.success('Texto Copiado com sucesso');
+      });
+    } else{
+      toast('Você excedeu o limite de uso deste recurso em contas demo');
+    }
   };
   const handleCancelSendFile = () => {
     setFile('');

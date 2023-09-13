@@ -2,6 +2,7 @@
 
 import { app, db } from '@/service/firebase';
 import {
+  Alert,
   Button,
   FormControl,
   IconButton,
@@ -92,7 +93,6 @@ export default function Home() {
       } else {
         router.push('/wordSwap');
         // await saveUserFirstTime(uid, (user.email as string), user.displayName)
-
       }
     } catch (error: any) {
       const errorCode = error.code;
@@ -189,71 +189,8 @@ export default function Home() {
               </Button>
             </form>
           )}
-          {/* <form onSubmit={handleSubmit(onSubmit)} style={StyleFormFlex}>
-            <Stack gap={'0.2rem'} marginBottom={2}>
-              <Typography component={'h5'} variant="h3">
-                SimplificaDoc
-              </Typography>
-              <Typography component={'span'} variant="subtitle1">
-                Faça documentos rápidamente
-              </Typography>
-            </Stack>
-            <Controller
-              control={control}
-              key="email_login"
-              {...register('email')}
-              render={({ field }) => (
-                <TextField
-                  label="Email"
-                  variant="outlined"
-                  fullWidth
-                  {...field}
-                />
-              )}
-            />
-            <Typography variant="subtitle2" color="error">
-              {errors.email?.message}
-            </Typography>
-            <Controller
-              {...register('password')}
-              control={control}
-              key="senha_login"
-              render={({ field }) => (
-                <FormControl variant="outlined">
-                  <InputLabel htmlFor="outlined-adornment-password">
-                    Senha
-                  </InputLabel>
-                  <OutlinedInput
-                    id="outlined-adornment-password"
-                    type={showPassword ? 'text' : 'password'}
-                    endAdornment={
-                      <InputAdornment position="end">
-                        <IconButton
-                          aria-label="toggle password visibility"
-                          onClick={handleClickShowPassword}
-                          onMouseDown={handleMouseDownPassword}
-                          edge="end"
-                        >
-                          {showPassword ? <VisibilityOff /> : <Visibility />}
-                        </IconButton>
-                      </InputAdornment>
-                    }
-                    label="Senha"
-                    {...field}
-                  />
-                </FormControl>
-              )}
-            />
-            <Typography variant="subtitle2" color="error">
-              {errors.password?.message}
-            </Typography>
-
-            <UpdateName open={openNameModal} setOpen={setOpenNameModal} />
-            <Button variant="contained" type="submit">
-              Login
-            </Button>
-          </form> */}
         </Paper>
+        <Alert  severity="info">{`Email : demo@simplificadoc.com - Senha:demo321`}</Alert>
       </Stack>
     </ThemeAndCssProvider>
   );

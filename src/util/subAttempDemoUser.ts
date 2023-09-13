@@ -10,3 +10,23 @@ export const subAttempDemoUser = async (
     });
   }
 };
+export const subAttempDemoDocUser = async (
+  userRef: DocumentReference<DocumentData, DocumentData>,
+  currentAttemp: number,
+) => {
+  if (currentAttemp > 0) {
+    await updateDoc(userRef, {
+      attemptDemoGenerateDoc: currentAttemp - 1,
+    });
+  }
+};
+export const subAttempDemoCopyDocUser = async (
+  userRef: DocumentReference<DocumentData, DocumentData>,
+  currentAttemp: number,
+) => {
+  if (currentAttemp > 0) {
+    await updateDoc(userRef, {
+      attemptDemoCopyDoc: currentAttemp - 1,
+    });
+  }
+};

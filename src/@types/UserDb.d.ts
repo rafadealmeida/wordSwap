@@ -3,5 +3,7 @@ interface UserDb {
   name: string;
   isDemo: boolean;
   isPremium: boolean;
-  attemptDemo:number
+  attemptDemo: number;
+  attemptDemoGenerateDoc: number;
+  attemptDemoCopyDoc: number;
 }
