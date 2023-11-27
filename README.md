@@ -26,6 +26,8 @@ este projeto foi muito graticifante.
 Neste sistema foi usado o Framework NextJs com TypeScript,
 Material UI, React-Hook-Form e utilizando Firebase como banco de dados
 
+## [Acesse o projeto clicando aqui!](https://simplifica-doc.vercel.app/)
+
 ### Sreen Shots 
 #### Ao fazer upload do arquivo , o sistema gerará o formulário com as informações do texto.
 ![image](https://github.com/rafadealmeida/wordSwap/assets/93219825/aa3cdf19-5feb-4938-8052-8cc9a46cc3b1)
