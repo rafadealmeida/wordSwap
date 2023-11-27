@@ -1,34 +1,41 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+### Simplifica Doc
 
-## Getting Started
+## Resumo
+Um sistema web para simplificar a criação de documentos repetitivos de forma ágil e eficiente.
+A inspiração para esse projeto surgiu de uma necessidade pessoal: meu pai estava envolvido em um trabalho
+que continha a elaboração constante de documentos, diversas vezes semelhantes, que modificava apenas os dados ou detalhes menores.
+Isso me motivou a pensar em como automatizar e acelerar o processo, já que a maior parte desses documentos
+compartilhava semelhanças, com apenas algumas partes que precisavam ser personalizadas, como dito anteriormente.
 
-First, run the development server:
+## Como usar
+Neste sistema o usuário prepara o arquivo previamente doc ou docx ,no word, por exemplo, seguindo os padrões do sistema, pontuando palavras ou frases a serem substituidas, colocando-as entre duplo colchetes.
+#### **Exemplo de um texto :** 
+>Este documento é direcionado a {{nome_da_pessoa}}, que contém o CPF: {{cpf_da_pessoa}} ...
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-```
+Ao fazer o upload do arquivo, seguindo os padrões, sistema gerará um formulários com as palavras ou frases que o usuário deseja substituir. Preenchendo este formulário,
+o sistema modificará o seu documentos com as informações inseridas pelo usuário, assim o usuário pode copiar o texto, ou baixar este documento já modificado.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Desafios
+Neste projeto tive alguns desafios interessante, o primeiro dele era definir como seria o funcionamento do sistema, como seria o fluxo de uso além de qual tecnologia escolher. Optei por usar o framework NextJs
+pra me expor a alguns desafios, utilizar NextJs em um projeto real e colocar em prova meus estudos juntamento com uma codificação de Back End, também usando o NextJs. Outro desafio foi a manipulação de arquivos,
+decidir como seria feito, escolher e encontrar uma biblioteca que atendesse o que era requirido e codificar está manipulação. Foi muitos erros, muitas dificuldades, mas ao conseguir, superá-los e atingir o objetivo,
+este projeto foi muito graticifante. 
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+## Tecnologias Usadas 
+Neste sistema foi usado o Framework NextJs com TypeScript,
+Material UI, React-Hook-Form e utilizando Firebase como banco de dados
 
-## Learn More
+### Sreen Shots 
+#### Ao fazer upload do arquivo , o sistema gerará o formulário com as informações do texto.
+![image](https://github.com/rafadealmeida/wordSwap/assets/93219825/aa3cdf19-5feb-4938-8052-8cc9a46cc3b1)
 
-To learn more about Next.js, take a look at the following resources:
+#### Preencher o formulário com os dados que devem ser incluidos no documento.
+![image](https://github.com/rafadealmeida/wordSwap/assets/93219825/63d43a74-05c0-45f5-842d-a60a689a10dc)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+#### Ao clicar em para substituir palavras, e o texto e modificado, podendo o usuário copiar o texto ou fazer download.
+![image](https://github.com/rafadealmeida/wordSwap/assets/93219825/d275285b-fd78-44f9-893b-4fa884bcb2ec)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
 
-## Deploy on Vercel
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
