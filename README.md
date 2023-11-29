@@ -20,7 +20,7 @@ o sistema modificará o seu documentos com as informações inseridas pelo usuá
 Neste projeto tive alguns desafios interessante, o primeiro dele era definir como seria o funcionamento do sistema, como seria o fluxo de uso além de qual tecnologia escolher. Optei por usar o framework NextJs
 pra me expor a alguns desafios, utilizar NextJs em um projeto real e colocar em prova meus estudos juntamento com uma codificação de Back End, também usando o NextJs. Outro desafio foi a manipulação de arquivos,
 decidir como seria feito, escolher e encontrar uma biblioteca que atendesse o que era requirido e codificar está manipulação. Foi muitos erros, muitas dificuldades, mas ao conseguir, superá-los e atingir o objetivo,
-este projeto foi muito graticifante. 
+este projeto foi muito gratificante. 
 
 ## Tecnologias Usadas 
 Neste sistema foi usado o Framework NextJs com TypeScript,
