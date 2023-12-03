@@ -23,8 +23,10 @@ decidir como seria feito, escolher e encontrar uma biblioteca que atendesse o qu
 este projeto foi muito gratificante. 
 
 ## Tecnologias Usadas 
-Neste sistema foi usado o Framework NextJs com TypeScript,
-Material UI, React-Hook-Form e utilizando Firebase como banco de dados
+  <p align='left'>
+    <img loading="lazy" src="https://skillicons.dev/icons?i=ts,react,nextjs,materialui, electron,git,github"/>  
+  </p>
+ React-Hook-Form e utilizando Firebase como banco de dados
 
 ## [Acesse o projeto clicando aqui!](https://simplifica-doc.vercel.app/)
 
